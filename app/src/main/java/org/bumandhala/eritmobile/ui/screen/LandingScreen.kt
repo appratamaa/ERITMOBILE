@@ -1,29 +1,51 @@
 package org.bumandhala.eritmobile.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.landingscreennavigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 
 @Composable
-fun LandingScreen(content: @Composable () -> Unit) {
+fun LandingScreen(navController: NavHostController) {
+    val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        coroutineScope.launch {
+            delay(1200) // Menunda navigasi selama 300ms
+            navController.navigate(Screen.Landing1.route)
+        }
+        onDispose { }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF1A237E))
+            .background(color = Color(0xFF263AA2))
     ) {
         Box(
             modifier = Modifier.align(Alignment.Center)
@@ -36,12 +58,13 @@ fun LandingScreen(content: @Composable () -> Unit) {
         }
     }
 }
+
+
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ScreenPreview() {
     ERITMOBILETheme {
-        LandingScreen {
-        }
+        LandingScreen ( rememberNavController())
     }
 }
