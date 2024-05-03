@@ -18,7 +18,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             LandingScreen (navController)
         }
         composable(route = Screen.Landing1.route) {
-            Landing1 {}
+            Landing1()
         }
     }
 }
