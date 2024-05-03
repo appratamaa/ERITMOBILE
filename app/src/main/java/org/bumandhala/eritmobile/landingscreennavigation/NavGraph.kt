@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.ui.screen.Landing1
 import org.bumandhala.eritmobile.ui.screen.Landing2
+import org.bumandhala.eritmobile.ui.screen.Landing3
 import org.bumandhala.eritmobile.ui.screen.LandingScreen
 
 @Composable
@@ -23,6 +24,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         }
         composable(route = Screen.Landing2.route) {
             Landing2(navController)
+        }
+        composable(route = Screen.Landing3.route) {
+            Landing3(navController)
         }
     }
 }

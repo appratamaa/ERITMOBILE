@@ -36,12 +36,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.landingscreennavigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 
 
 @Composable
-fun Landing2(navController: NavHostController) {
+fun Landing3(navController: NavHostController) {
     val poppinsblack = FontFamily(Font(R.font.poppinsblack))
 
     Box(
@@ -58,7 +57,7 @@ fun Landing2(navController: NavHostController) {
         ) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.landing2),
+                text = stringResource(R.string.landing3),
                 fontFamily = poppinsblack,
                 style = TextStyle(color = Color.White, fontSize = 26.sp),
                 textAlign = TextAlign.Start,
@@ -66,7 +65,7 @@ fun Landing2(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Image(
-                painter = painterResource(R.drawable.kalkulator),
+                painter = painterResource(R.drawable.goals),
                 contentDescription = null,
                 modifier = Modifier.size(450.dp)
             )
@@ -80,22 +79,22 @@ fun Landing2(navController: NavHostController) {
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Canvas(modifier = Modifier.size(10.dp)) {
-                    drawCircle(color = Color(0xFF20BCCB))
+                    drawCircle(color = Color.White)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Canvas(modifier = Modifier.size(10.dp)) {
-                    drawCircle(color = Color.White)
+                    drawCircle(color = Color(0xFF20BCCB))
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {navController.navigate(Screen.Landing3.route)},
+                onClick = { /*TODO*/ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(5)
             ) {
                 Text(
-                    text = stringResource(R.string.lewati),
+                    text = stringResource(R.string.mulai),
                     fontFamily = poppinsblack,
                     style = TextStyle(color = Color.White, fontSize = 26.sp),
                 )
@@ -106,8 +105,8 @@ fun Landing2(navController: NavHostController) {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun Landing2Preview() {
+fun Landing3Preview() {
     ERITMOBILETheme {
-        Landing2(rememberNavController())
+        Landing3(rememberNavController())
     }
 }
