@@ -5,4 +5,5 @@ sealed class Screen(val route: String) {
     data object Landing1: Screen("landing1")
     data object Landing2: Screen("landing2")
     data object Landing3: Screen("landing3")
+    data object Register: Screen("register")
 }

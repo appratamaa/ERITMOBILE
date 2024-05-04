@@ -5,4 +5,13 @@
     <string name="landing2">Kelola keuanganmu dengan E-RIT</string>
     <string name="landing3">Capai tujuanmu dengan E-RIT</string>
     <string name="mulai">Mulai</string>
+    <string name="buatakun">Buat Akun</string>
+    <string name="nama">Nama</string>
+    <string name="namapengguna">Nama pengguna</string>
+    <string name="email">Email</string>
+    <string name="katasandi">Kata sandi</string>
+    <string name="konfirmasi">Konfirmasi kata sandi</string>
+    <string name="daftar">Daftar</string>
+    <string name="sudahpunyaakun">Sudah Punya Akun?</string>
+    <string name="masuk">Masuk</string>
 </resources>

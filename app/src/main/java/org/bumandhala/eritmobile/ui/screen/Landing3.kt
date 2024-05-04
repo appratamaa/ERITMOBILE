@@ -32,10 +32,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.landingscreennavigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 
 
@@ -88,10 +88,10 @@ fun Landing3(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {navController.navigate(Screen.Register.route)},
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(5)
+                shape = RoundedCornerShape(15)
             ) {
                 Text(
                     text = stringResource(R.string.mulai),

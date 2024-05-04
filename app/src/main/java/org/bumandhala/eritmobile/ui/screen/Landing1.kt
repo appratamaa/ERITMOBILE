@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
@@ -92,7 +91,7 @@ fun Landing1(navController: NavHostController) {
                 onClick = {navController.navigate(Screen.Landing2.route)},
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(5)
+                shape = RoundedCornerShape(15)
             ) {
                 Text(
                     text = stringResource(R.string.lewati),
