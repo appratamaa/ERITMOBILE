@@ -54,13 +54,10 @@ import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Register(navController: NavHostController) {
-    var nama by rememberSaveable { mutableStateOf("") }
+fun Login(navController: NavHostController) {
     var namaPengguna by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
     var kataSandi by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
-    var konfirmasi by rememberSaveable { mutableStateOf("") }
 
     val poppinsblack = FontFamily(Font(R.font.poppinsblack))
     val poppinsmedium = FontFamily(Font(R.font.poppinsmedium))
@@ -84,31 +81,12 @@ fun Register(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = stringResource(R.string.buatakun),
+                text = stringResource(R.string.masuk),
                 fontFamily = poppinsblack,
                 style = TextStyle(color = Color.White, fontSize = 26.sp),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 8.dp)
             )
-            OutlinedTextField(
-                value = nama,
-                onValueChange = { nama = it },
-                placeholder = { Text(text = stringResource(R.string.nama),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(15),
-                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 6.dp),
-                textStyle = TextStyle(fontFamily = poppinsmedium)
-            )
-
             OutlinedTextField(
                 value = namaPengguna,
                 onValueChange = { namaPengguna = it },
@@ -128,24 +106,6 @@ fun Register(navController: NavHostController) {
                 textStyle = TextStyle(fontFamily = poppinsmedium)
             )
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                placeholder = { Text(text = stringResource(R.string.email),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
-                shape = RoundedCornerShape(15),
-                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 6.dp),
-                textStyle = TextStyle(fontFamily = poppinsmedium)
-            )
-            OutlinedTextField(
                 value = kataSandi,
                 onValueChange = { kataSandi = it },
                 placeholder = { Text(text = stringResource(R.string.katasandi),
@@ -154,9 +114,9 @@ fun Register(navController: NavHostController) {
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Next,
+                    imeAction = ImeAction.Done,
 
-                ),
+                    ),
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
@@ -175,32 +135,14 @@ fun Register(navController: NavHostController) {
                     .padding(bottom = 6.dp),
                 textStyle = TextStyle(fontFamily = poppinsmedium),
             )
-            OutlinedTextField(
-                value = konfirmasi,
-                onValueChange = { konfirmasi = it },
-                placeholder = { Text(text = stringResource(R.string.konfirmasi),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                        val icon: Painter = if (passwordVisibility) {
-                            painterResource(id = R.drawable.eye_off)
-                        } else {
-                            painterResource(id = R.drawable.eye_on)
-                        }
-                        Icon(icon, contentDescription = "Toggle password visibility")
-                    }
-                },
-                shape = RoundedCornerShape(15),
-                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(fontFamily = poppinsmedium)
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.lupakatasandi),
+                fontFamily = poppinsmedium,
+                style = TextStyle(color = Color.White, fontSize = 18.sp),
+                modifier = Modifier.clickable {
+//                    navController.navigate(Screen.Landing3.route)
+                }
             )
             Spacer(modifier = Modifier.height(36.dp))
             Button(
@@ -210,23 +152,23 @@ fun Register(navController: NavHostController) {
                 shape = RoundedCornerShape(15)
             ) {
                 Text(
-                    text = stringResource(R.string.daftar),
+                    text = stringResource(R.string.masuk),
                     fontFamily = poppinsblack,
                     style = TextStyle(color = Color.White, fontSize = 22.sp),
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.sudahpunyaakun),
+                text = stringResource(R.string.belumpunyaakun),
                 fontFamily = poppinsmedium,
                 style = TextStyle(color = Color.White, fontSize = 18.sp),
             )
             Text(
-                text = stringResource(R.string.masuk),
+                text = stringResource(R.string.buatakun),
                 fontFamily = poppinsblack,
                 style = TextStyle(color = Color.White, fontSize = 18.sp),
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.Login.route)
+                    navController.navigate(Screen.Register.route)
                 }
             )
         }
@@ -235,8 +177,8 @@ fun Register(navController: NavHostController) {
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
-fun RegisterPreview() {
+fun LoginPreview() {
     ERITMOBILETheme {
-        Register(rememberNavController())
+        Login(rememberNavController())
     }
 }

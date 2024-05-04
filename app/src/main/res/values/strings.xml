@@ -14,4 +14,6 @@
     <string name="daftar">Daftar</string>
     <string name="sudahpunyaakun">Sudah Punya Akun?</string>
     <string name="masuk">Masuk</string>
+    <string name="lupakatasandi">Lupa Kata Sandi?</string>
+    <string name="belumpunyaakun">Belum Punya Akun?</string>
 </resources>
