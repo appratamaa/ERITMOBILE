@@ -140,7 +140,7 @@ fun Login(navController: NavHostController) {
                 text = stringResource(R.string.lupakatasandi),
                 fontFamily = poppinsmedium,
                 style = TextStyle(color = Color.White, fontSize = 18.sp),
-                modifier = Modifier.clickable {
+                modifier = Modifier.padding(end = 150.dp).clickable {
 //                    navController.navigate(Screen.Landing3.route)
                 }
             )

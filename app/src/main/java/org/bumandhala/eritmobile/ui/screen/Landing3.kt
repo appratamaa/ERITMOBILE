@@ -88,7 +88,7 @@ fun Landing3(navController: NavHostController) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {navController.navigate(Screen.Register.route)},
+                onClick = {navController.navigate(Screen.Login.route)},
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(15)
