@@ -16,4 +16,11 @@
     <string name="masuk">Masuk</string>
     <string name="lupakatasandi">Lupa Kata Sandi?</string>
     <string name="belumpunyaakun">Belum Punya Akun?</string>
+    <string name="input_valid">Registrasi berhasil.</string>
+    <string name="input_invalid">Form tidak boleh kosong.</string>
+    <string name="email_invalid">Email Anda kurang tepat.</string>
+    <string name="login_invalid">Gagal login.</string>
+    <string name="registered_account">Akun sudah terdaftar.</string>
+    <string name="password_invalid">Password minimal 8 karakter dan harus memiliki setidaknya satu angka dan simbol.</string>
+    <string name="confirm_invalid">Konfirmasi password tidak sesuai.</string>
 </resources>

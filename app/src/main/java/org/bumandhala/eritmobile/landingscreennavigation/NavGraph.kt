@@ -10,15 +10,16 @@ import org.bumandhala.eritmobile.ui.screen.Landing2
 import org.bumandhala.eritmobile.ui.screen.Landing3
 import org.bumandhala.eritmobile.ui.screen.LandingScreen
 import org.bumandhala.eritmobile.ui.screen.Login
+import org.bumandhala.eritmobile.ui.screen.MainScreen
 import org.bumandhala.eritmobile.ui.screen.Register
 
 @Composable
 fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.LandingScreen.route
     ) {
-        composable(route = Screen.Home.route) {
+        composable(route = Screen.LandingScreen.route) {
             LandingScreen (navController)
         }
         composable(route = Screen.Landing1.route) {
@@ -35,6 +36,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         }
         composable(route = Screen.Login.route) {
             Login(navController)
+        }
+        composable(route = Screen.Home.route) {
+            MainScreen(navController)
         }
     }
 }

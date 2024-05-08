@@ -1,6 +1,7 @@
 package org.bumandhala.eritmobile.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,12 +28,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -46,21 +49,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.database.EritDb
 import org.bumandhala.eritmobile.landingscreennavigation.Screen
+import org.bumandhala.eritmobile.model.LoginViewModel
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
+import org.bumandhala.eritmobile.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Login(navController: NavHostController) {
-    var namaPengguna by rememberSaveable { mutableStateOf("") }
-    var kataSandi by remember { mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) }
-
     val poppinsblack = FontFamily(Font(R.font.poppinsblack))
     val poppinsmedium = FontFamily(Font(R.font.poppinsmedium))
+
+    var namaPengguna by rememberSaveable { mutableStateOf("") }
+    var namaPenggunaError by remember { mutableStateOf(false) }
+
+    var kataSandi by remember { mutableStateOf("") }
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var enterPasswordError by remember { mutableStateOf(false) }
+
+
+    val context = LocalContext.current
+    val db = EritDb.getInstance(context)
+    val factory = ViewModelFactory(db.dao)
+    val viewModel: LoginViewModel = viewModel(factory = factory)
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -146,7 +164,19 @@ fun Login(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(36.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { coroutineScope.launch {
+                    if (viewModel.login(
+                            namaPengguna,
+                            kataSandi
+                        )
+                    ) navController.navigate(Screen.Home.route)
+                    else Toast.makeText(
+                        context,
+                        context.getString(R.string.login_invalid),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(15)
