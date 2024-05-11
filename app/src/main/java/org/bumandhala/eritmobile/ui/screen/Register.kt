@@ -82,6 +82,8 @@ fun Register(navController: NavHostController) {
     var konfirmasi by rememberSaveable { mutableStateOf("") }
     var konfirmasiError by remember { mutableStateOf(false) }
 
+    val showDialog = remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val db = EritDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -116,9 +118,13 @@ fun Register(navController: NavHostController) {
             OutlinedTextField(
                 value = nama,
                 onValueChange = { nama = it },
-                placeholder = { Text(text = stringResource(R.string.nama),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.nama),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium
+                    )
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -135,9 +141,13 @@ fun Register(navController: NavHostController) {
             OutlinedTextField(
                 value = namaPengguna,
                 onValueChange = { namaPengguna = it },
-                placeholder = { Text(text = stringResource(R.string.namapengguna),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.namapengguna),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
@@ -153,9 +163,13 @@ fun Register(navController: NavHostController) {
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                placeholder = { Text(text = stringResource(R.string.email),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.email),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email,
@@ -171,15 +185,19 @@ fun Register(navController: NavHostController) {
             OutlinedTextField(
                 value = kataSandi,
                 onValueChange = { kataSandi = it },
-                placeholder = { Text(text = stringResource(R.string.katasandi),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.katasandi),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
                     imeAction = ImeAction.Next,
 
-                ),
+                    ),
                 visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
@@ -201,9 +219,13 @@ fun Register(navController: NavHostController) {
             OutlinedTextField(
                 value = konfirmasi,
                 onValueChange = { konfirmasi = it },
-                placeholder = { Text(text = stringResource(R.string.konfirmasi),
-                    style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
-                    fontFamily = poppinsmedium,) },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.konfirmasi),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
@@ -227,27 +249,30 @@ fun Register(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.height(36.dp))
             Button(
-                onClick = { namaError = (nama == "")
+                onClick = {
+                    namaError = (nama == "")
                     namaPenggunaError = (namaPengguna == "")
                     emailError = (email == "")
                     kataSandiError = (kataSandi == "")
                     konfirmasiError = (konfirmasi == "")
-                    if (namaError || namaPenggunaError || emailError || kataSandiError || konfirmasiError){
+                    if (namaError || namaPenggunaError || emailError || kataSandiError || konfirmasiError) {
                         Toast.makeText(
                             context, context.getString(R.string.input_invalid),
                             Toast.LENGTH_SHORT
                         ).show()
                         return@Button
                     } else {
-                        coroutineScope.launch{
-                            if (viewModel.register(nama, namaPengguna, email, kataSandi, konfirmasi)){
-                                Toast.makeText(
-                                    context, context.getString(R.string.input_valid),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                navController.navigate(Screen.Login.route)
-                            }
-                            else{
+                        coroutineScope.launch {
+                            if (viewModel.register(
+                                    nama,
+                                    namaPengguna,
+                                    email,
+                                    kataSandi,
+                                    konfirmasi
+                                )
+                            ) {
+                                showDialog.value = true
+                            } else {
                                 Toast.makeText(
                                     context, context.getString(R.string.registered_account),
                                     Toast.LENGTH_SHORT
@@ -255,7 +280,7 @@ fun Register(navController: NavHostController) {
                             }
                         }
                     }
-                    },
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(15)
@@ -281,8 +306,12 @@ fun Register(navController: NavHostController) {
                 }
             )
         }
+        if (showDialog.value) {
+            PopupRegister(showDialog = showDialog, navController = navController)
+        }
     }
 }
+
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable

@@ -1,6 +1,8 @@
 package org.bumandhala.eritmobile.landingscreennavigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,6 +13,7 @@ import org.bumandhala.eritmobile.ui.screen.Landing3
 import org.bumandhala.eritmobile.ui.screen.LandingScreen
 import org.bumandhala.eritmobile.ui.screen.Login
 import org.bumandhala.eritmobile.ui.screen.MainScreen
+import org.bumandhala.eritmobile.ui.screen.PopupRegister
 import org.bumandhala.eritmobile.ui.screen.Register
 
 @Composable

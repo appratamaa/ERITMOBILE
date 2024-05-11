@@ -73,6 +73,7 @@ fun Login(navController: NavHostController) {
     var passwordVisibility by remember { mutableStateOf(false) }
     var enterPasswordError by remember { mutableStateOf(false) }
 
+    val showDialog = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val db = EritDb.getInstance(context)
@@ -169,8 +170,9 @@ fun Login(navController: NavHostController) {
                             namaPengguna,
                             kataSandi
                         )
-                    ) navController.navigate(Screen.Home.route)
-                    else Toast.makeText(
+                    ) {
+                        showDialog.value = true
+                    } else Toast.makeText(
                         context,
                         context.getString(R.string.login_invalid),
                         Toast.LENGTH_SHORT
@@ -201,6 +203,9 @@ fun Login(navController: NavHostController) {
                     navController.navigate(Screen.Register.route)
                 }
             )
+        }
+        if (showDialog.value) {
+            PopupLogin(showDialog = showDialog, navController = navController)
         }
     }
 }
