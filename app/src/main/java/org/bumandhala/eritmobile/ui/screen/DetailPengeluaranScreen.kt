@@ -12,7 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -53,7 +56,7 @@ const val KEY_ID_PENGELUARAN ="idCatatan"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailPengeluaranScreen(navController: NavHostController, idPemasukan: Long? = null) {
+fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Long? = null) {
     val context = LocalContext.current
     val db = CatatanDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -65,8 +68,8 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPemasukan: Long?
 
 
     LaunchedEffect(true) {
-        if (idPemasukan == null) return@LaunchedEffect
-        val data = viewModel.getCatatanPemasukan(idPemasukan) ?: return@LaunchedEffect
+        if (idPengeluaran == null) return@LaunchedEffect
+        val data = viewModel.getCatatanPengeluaran(idPengeluaran) ?: return@LaunchedEffect
         tanggal = data.tanggal
         nominal = data.nominal
         keterangan = data.keterangan
@@ -85,10 +88,10 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPemasukan: Long?
                     }
                 },
                 title = {
-                    if (idPemasukan == null)
-                        Text(text = stringResource(R.string.tambah_pemasukan), color = Color(0xFF20BCCB))
+                    if (idPengeluaran == null)
+                        Text(text = stringResource(R.string.tambah_pengeluaran), color = Color(0xFF20BCCB))
                     else
-                        Text(text = stringResource(R.string.edit_pemasukan), color = Color(0xFF20BCCB))
+                        Text(text = stringResource(R.string.edit_pengeluaran), color = Color(0xFF20BCCB))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color.White
@@ -104,33 +107,40 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPemasukan: Long?
             keterangan = keterangan,
             onKeteranganChange = { keterangan = it },
             navController = navController, // Sertakan NavController di sini
-            idPemasukan = idPemasukan, // Sertakan idPemasukan di sini
+            idPengeluaran = idPengeluaran, // Sertakan idPengeluaran di sini
             viewModel = viewModel, // Sertakan viewModel di sini
             modifier = Modifier.padding(padding)
         )
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormPengeluaran(
     tanggal: String, onTanggalChange: (String) -> Unit,
     nominal: Int, onNominalChange: (Int) -> Unit,
     keterangan: String, onKeteranganChange: (String) -> Unit,
     navController: NavHostController, // Tambahkan parameter navController
-    idPemasukan: Long? = null, // Tambahkan parameter id
+    idPengeluaran: Long? = null, // Tambahkan parameter id
     viewModel: DetailViewModel,
     modifier: Modifier
 ) {
+    val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
+    var showDialog by remember { mutableStateOf(false) } // Variabel State
+
+    // Dropdown related states
+    var expanded by remember { mutableStateOf(false) }
+    val options = listOf("Makan", "Tagihan", "Transportasi", "Hiburan", "Lainnya")
+    var selectedOption by remember { mutableStateOf(keterangan) }
+    var lainnyaText by remember { mutableStateOf("") }
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 0.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        val context = LocalContext.current
-        val focusRequester = remember { FocusRequester() }
-        var showDialog by remember { mutableStateOf(false) } // Variabel State
-
         OutlinedTextField(
             value = tanggal,
             onValueChange = { onTanggalChange(it) },
@@ -162,24 +172,69 @@ fun FormPengeluaran(
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        OutlinedTextField(
-            value = keterangan,
-            onValueChange = { onKeteranganChange(it) },
-            label = { Text(text = stringResource(R.string.keterangan)) },
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Sentences,
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
+
+        // ExposedDropdownMenuBox for keterangan
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = {
+                expanded = !expanded
+            }
+        ) {
+            OutlinedTextField(
+                value = selectedOption,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text(text = stringResource(R.string.keterangan)) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                colors = ExposedDropdownMenuDefaults.textFieldColors(),
+                modifier = Modifier
+                    .menuAnchor() // Used for menu alignment
+                    .fillMaxWidth()
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        text = { Text(selectionOption) },
+                        onClick = {
+                            selectedOption = selectionOption
+                            onKeteranganChange(selectionOption) // Update the state in viewModel
+                            expanded = false
+                            // If "Lainnya" is selected, reset the lainnyaText
+                            if (selectionOption != "Lainnya") {
+                                lainnyaText = ""
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
+        // Show TextField only when "Lainnya" is selected
+        if (selectedOption == "Lainnya") {
+            OutlinedTextField(
+                value = lainnyaText,
+                onValueChange = { lainnyaText = it },
+                label = { Text(text = stringResource(R.string.keterangan_lainnya)) },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
         Button(
             onClick = {
-                if (tanggal.isEmpty() || nominal == 0 || keterangan.isEmpty()) {
+                val finalKeterangan = if (selectedOption == "Lainnya") lainnyaText else selectedOption
+                if (tanggal.isEmpty() || nominal == 0 || finalKeterangan.isEmpty()) {
                     Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                 } else {
-                    if (idPemasukan == null) {
-                        viewModel.insertPemasukan(tanggal, nominal, keterangan)
+                    if (idPengeluaran == null) {
+                        viewModel.insertPengeluaran(tanggal, nominal, finalKeterangan)
                     } else {
-                        viewModel.updatePemasukan(idPemasukan, tanggal, nominal, keterangan)
+                        viewModel.updatePengeluaran(idPengeluaran, tanggal, nominal, finalKeterangan)
                     }
                     navController.popBackStack()
                 }
@@ -196,9 +251,7 @@ fun FormPengeluaran(
             )
         }
 
-
-
-        if (idPemasukan != null) {
+        if (idPengeluaran != null) {
             Button(
                 onClick = {
                     showDialog = true
@@ -218,12 +271,13 @@ fun FormPengeluaran(
                 openDialog = showDialog,
                 onDismissRequest = { showDialog = false }) {
                 showDialog = false
-                viewModel.deletePemasukan(idPemasukan)
+                viewModel.deletePengeluaran(idPengeluaran)
                 navController.popBackStack()
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

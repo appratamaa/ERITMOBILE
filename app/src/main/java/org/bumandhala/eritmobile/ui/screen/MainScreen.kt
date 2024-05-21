@@ -56,6 +56,7 @@ import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.database.CatatanDb
 import org.bumandhala.eritmobile.model.Pemasukan
+import org.bumandhala.eritmobile.model.Pengeluaran
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.SettingsDataStore
@@ -70,6 +71,8 @@ import java.util.Locale
 @Composable
 fun MainScreen(navController: NavHostController) {
     SettingsDataStore(LocalContext.current)
+
+    var selectedButton by remember { mutableStateOf("Pemasukan") }
 
     Scaffold(
         topBar = {
@@ -95,7 +98,11 @@ fun MainScreen(navController: NavHostController) {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate(Screen.FormBaru.route)
+                    when (selectedButton) {
+                        "Pemasukan" -> navController.navigate(Screen.FormBaruPemasukan.route)
+                        "Pengeluaran" -> navController.navigate(Screen.FormBaruPengeluaran.route)
+                        // Tambahkan rute lain jika diperlukan
+                    }
                 }
             ) {
                 Icon(
@@ -111,139 +118,181 @@ fun MainScreen(navController: NavHostController) {
             ScreenContent(
                 modifier = Modifier
                     .padding(padding)
-                    .background(color = MaterialTheme.colorScheme.tertiary), navController
+                    .background(color = MaterialTheme.colorScheme.tertiary),
+                navController = navController,
+                selectedButton = selectedButton,
+                onSelectedButtonChange = { selectedButton = it }
             )
         }
     }
 }
 
-fun formatRupiah(nominal: Int): String {
-    val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-    return formatRupiah.format(nominal).replace("Rp", "")
-}
+    fun formatRupiah(nominal: Int): String {
+        val formatRupiah = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+        return formatRupiah.format(nominal).replace("Rp", "")
+    }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ScreenContent(modifier: Modifier, navController: NavHostController) {
-    val context = LocalContext.current
-    val db = CatatanDb.getInstance(context)
-    val factory = ViewModelFactory(db.dao)
-    val viewModel: MainViewModel = viewModel(factory = factory)
-    val data by viewModel.data.collectAsState()
 
-    Column(modifier = modifier
-        .fillMaxSize()
-        .background(color = Color(0xFFE5E7EE))) {
-        // Menampilkan salam dan waktu tanggal
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp), // Tetapkan padding di sini
-            horizontalArrangement = Arrangement.Center,// Menetapkan horizontal alignment ke tengah
-            verticalAlignment = Alignment.CenterVertically // Menetapkan vertikal alignment ke tengah
-        ) {
-            Salutation()
-            Spacer(modifier = Modifier.weight(1f)) // Spacer untuk memberikan ruang di antara elemen
-            CalendarIconAndDateTime()
-        }
+    @RequiresApi(Build.VERSION_CODES.O)
+    @Composable
+    fun ScreenContent(
+        modifier: Modifier,
+        navController: NavHostController,
+        selectedButton: String,
+        onSelectedButtonChange: (String) -> Unit
+    ) {
+        val context = LocalContext.current
+        val db = CatatanDb.getInstance(context)
+        val factory = ViewModelFactory(db.dao)
+        val viewModel: MainViewModel = viewModel(factory = factory)
+        val pemasukanData by viewModel.pemasukanData.collectAsState()
+        val pengeluaranData by viewModel.pengeluaranData.collectAsState()
 
-        // Menampilkan tombol-tombol
-        Row {
-            MyButtons() // Memanggil fungsi MyButtons yang telah dibuat sebelumnya
-        }
-
-        // Menampilkan kotak "Pemasukan"
-        val totalNominal = data.sumOf { it.nominal }
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 16.dp,
-                        topEnd = 16.dp
-                    )
-                )
-                .background(color = Color(0xFF00B4FF))
-                .padding(8.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .background(color = Color(0xFFE5E7EE))
         ) {
-            Text(
-                text = "Pemasukan",
-                modifier = Modifier.padding(16.dp, 16.dp, 8.dp), // Sesuaikan padding di sini
-                fontWeight = FontWeight.Bold,
-                color = White
-            )
-            Text(
-                text = "Rp ${formatRupiah(totalNominal)}",
-                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                color = White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 28.sp
-            )
-        }
-
-        if (data.isEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-//                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .background(color = White)
-                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = stringResource(id = R.string.list_kosong))
-            }
-        } else {
+            // Menampilkan salam dan waktu tanggal
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-//                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .background(color = White)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .padding(16.dp), // Tetapkan padding di sini
+                horizontalArrangement = Arrangement.Center, // Menetapkan horizontal alignment ke tengah
+                verticalAlignment = Alignment.CenterVertically // Menetapkan vertikal alignment ke tengah
+            ) {
+                Salutation()
+                Spacer(modifier = Modifier.weight(1f)) // Spacer untuk memberikan ruang di antara elemen
+                CalendarIconAndDateTime()
+            }
+
+            // Menampilkan tombol-tombol
+            Row {
+                MyButtons(selectedButton) { newSelection ->
+                    onSelectedButtonChange(newSelection)
+                } // Memanggil fungsi MyButtons yang telah dibuat sebelumnya
+            }
+
+            // Menampilkan kotak "Pemasukan" atau "Pengeluaran"
+            val totalNominal = when (selectedButton) {
+                "Pemasukan" -> pemasukanData.sumOf { it.nominal } - pengeluaranData.sumOf { it.nominal }
+                "Pengeluaran" -> pengeluaranData.sumOf { it.nominal }
+                else -> 0
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 16.dp,
+                            topEnd = 16.dp
+                        )
+                    )
+                    .background(
+                        color = when (selectedButton) {
+                            "Pemasukan" -> Color(0xFF00B4FF)
+                            "Pengeluaran" -> Color(0xFFDB5A5A)
+                            "Tabungan" -> Color(0xFFFAC36A)
+                            else -> Color(0xFF00B4FF)
+                        }
+                    )
+                    .padding(8.dp)
             ) {
                 Text(
-                    text = "Tanggal",
-                    modifier = Modifier.weight(1f),
+                    text = selectedButton,
+                    modifier = Modifier.padding(16.dp, 16.dp, 8.dp), // Sesuaikan padding di sini
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    color = White
                 )
                 Text(
-                    text = "Nominal",
-                    modifier = Modifier.weight(1f),
+                    text = "Rp ${formatRupiah(totalNominal)}",
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
+                    color = White,
                     fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "Keterangan",
-                    modifier = Modifier.weight(1f),
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                    fontSize = 28.sp
                 )
             }
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .background(color = White)
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                contentPadding = PaddingValues(bottom = 84.dp)
-            ) {
-                items(data) {
-                    ListPemasukan(pemasukan = it) {
-                        navController.navigate(Screen.FormUbahPemasukan.withIdPemasukan(it.idPemasukan))
+
+            val isEmpty = when (selectedButton) {
+                "Pemasukan" -> pemasukanData.isEmpty()
+                "Pengeluaran" -> pengeluaranData.isEmpty()
+                else -> true
+            }
+
+            if (isEmpty) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = White)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(id = R.string.list_kosong))
+                }
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = White)
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = "Tanggal",
+                        modifier = Modifier.weight(1f),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "Nominal",
+                        modifier = Modifier.weight(1f),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        text = "Keterangan",
+                        modifier = Modifier.weight(1f),
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(color = White)
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(bottom = 84.dp)
+                ) {
+                    if (selectedButton == "Pemasukan") {
+                        items(pemasukanData) { pemasukan ->
+                            ListPemasukan(pemasukan = pemasukan) {
+                                navController.navigate(
+                                    Screen.FormUbahPemasukan.withIdPemasukan(
+                                        pemasukan.idPemasukan
+                                    )
+                                )
+                            }
+                        }
+                    } else if (selectedButton == "Pengeluaran") {
+                        items(pengeluaranData) { pengeluaran ->
+                            ListPengeluaran(pengeluaran = pengeluaran) {
+                                navController.navigate(
+                                    Screen.FormUbahPengeluaran.withIdPengeluaran(
+                                        pengeluaran.idPengeluaran
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
-}
+
 
 @Composable
-fun MyButtons() {
-    var isPemasukanClicked by remember { mutableStateOf(true) }
-    var isPengeluaranClicked by remember { mutableStateOf(false) }
-    var isTabunganClicked by remember { mutableStateOf(false) }
-
+fun MyButtons(selectedButton: String, onSelectionChange: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -254,54 +303,39 @@ fun MyButtons() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Button(
-            onClick = {
-                isPemasukanClicked = true
-                isPengeluaranClicked = false
-                isTabunganClicked = false
-            },
-            colors = ButtonDefaults.buttonColors(if (isPemasukanClicked) Color(0xFF00B4FF) else White),
-            modifier = Modifier
-                .weight(1f)
+            onClick = { onSelectionChange("Pemasukan") },
+            colors = ButtonDefaults.buttonColors(if (selectedButton == "Pemasukan") Color(0xFF00B4FF) else White),
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = "Pemasukan",
-                color = if (isPemasukanClicked) White else Color.Black,
+                color = if (selectedButton == "Pemasukan") White else Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp // Mengatur ukuran font menjadi lebih kecil
             )
         }
 
         Button(
-            onClick = {
-                isPengeluaranClicked = true
-                isPemasukanClicked = false
-                isTabunganClicked = false
-            },
-            colors = ButtonDefaults.buttonColors(if (isPengeluaranClicked) Color(0xFFDB5A5A) else White),
-            modifier = Modifier
-                .weight(1f)
+            onClick = { onSelectionChange("Pengeluaran") },
+            colors = ButtonDefaults.buttonColors(if (selectedButton == "Pengeluaran") Color(0xFFDB5A5A) else White),
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = "Pengeluaran",
-                color = if (isPengeluaranClicked) White else Color.Black,
+                color = if (selectedButton == "Pengeluaran") White else Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp // Mengatur ukuran font menjadi lebih kecil
             )
         }
 
         Button(
-            onClick = {
-                isTabunganClicked = true
-                isPemasukanClicked = false
-                isPengeluaranClicked = false
-            },
-            colors = ButtonDefaults.buttonColors(if (isTabunganClicked) Color(0xFFFAC36A) else White),
-            modifier = Modifier
-                .weight(1f)
+            onClick = { onSelectionChange("Tabungan") },
+            colors = ButtonDefaults.buttonColors(if (selectedButton == "Tabungan") Color(0xFFFAC36A) else White),
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 text = "Tabungan",
-                color = if (isTabunganClicked) White else Color.Black,
+                color = if (selectedButton == "Tabungan") White else Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp // Mengatur ukuran font menjadi lebih kecil
             )
@@ -373,6 +407,41 @@ fun ListPemasukan(pemasukan: Pemasukan, onClick: () -> Unit) {
         )
         Text(
             text = pemasukan.keterangan,
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun ListPengeluaran(pengeluaran: Pengeluaran, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable { onClick() }
+            .background(color = White)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Text(
+            text = pengeluaran.tanggal,
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = pengeluaran.nominal.toString(),
+            modifier = Modifier.weight(1f),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = pengeluaran.keterangan,
             modifier = Modifier.weight(1f),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

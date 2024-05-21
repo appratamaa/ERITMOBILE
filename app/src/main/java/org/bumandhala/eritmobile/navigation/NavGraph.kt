@@ -25,8 +25,11 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Home.route){
             MainScreen(navController)
         }
-        composable(route = Screen.FormBaru.route){
+        composable(route = Screen.FormBaruPemasukan.route){
             DetailPemasukanScreen(navController)
+        }
+        composable(route = Screen.FormBaruPengeluaran.route){
+            DetailPengeluaranScreen(navController)
         }
         composable(
             route = Screen.FormUbahPemasukan.route,
@@ -35,7 +38,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             )
         ) {navBackStackEntry ->
             val idPemasukan = navBackStackEntry.arguments?.getLong(KEY_ID_PEMASUKAN)
-            DetailPemasukanScreen(navController,idPemasukan)
+            DetailPemasukanScreen(navController, idPemasukan)
         }
         composable(
             route = Screen.FormUbahPengeluaran.route,
@@ -44,7 +47,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             )
         ) {navBackStackEntry ->
             val idPengeluaran = navBackStackEntry.arguments?.getLong(KEY_ID_PENGELUARAN)
-            DetailPengeluaranScreen(navController,idPengeluaran)
+            DetailPengeluaranScreen(navController, idPengeluaran)
         }
     }
 }

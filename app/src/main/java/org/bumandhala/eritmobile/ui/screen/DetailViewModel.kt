@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bumandhala.eritmobile.database.CatatanDao
 import org.bumandhala.eritmobile.model.Pemasukan
+import org.bumandhala.eritmobile.model.Pengeluaran
 
 class DetailViewModel(private val dao: CatatanDao): ViewModel() {
 
@@ -40,6 +41,42 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
     fun deletePemasukan(idPemasukan: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             dao.deletePemasukanByID(idPemasukan)
+        }
+    }
+
+
+    //PENGELUARAN
+    fun insertPengeluaran(tanggal: String, nominal: Int, keterangan: String) {
+        val pemasukan = Pengeluaran(
+            tanggal = tanggal,
+            nominal = nominal,
+            keterangan = keterangan
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.insertPengeluaran(pemasukan)
+        }
+    }
+
+    suspend fun getCatatanPengeluaran(idPengeluaran: Long): Pengeluaran? {
+        return dao.getPengeluaranById(idPengeluaran)
+    }
+
+    fun updatePengeluaran(idPengeluaran: Long, tanggal: String, nominal: Int, keterangan: String) {
+        val catatan = Pengeluaran(
+            idPengeluaran = idPengeluaran,
+            tanggal = tanggal,
+            nominal = nominal,
+            keterangan = keterangan
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.updatePengeluaran(catatan)
+        }
+    }
+
+    fun deletePengeluaran(idPengeluaran: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deletePengeluaranByID(idPengeluaran)
         }
     }
 }
