@@ -4,17 +4,18 @@
     <string name="x_diklik">%1$s diklik!</string>\
     <string name="tambah_pemasukan">Tambah Pemasukan</string>
     <string name="judul">Judul</string>
-    <string name="isi_catatan">Isi Catatan</string>
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
     <string name="edit_pemasukan">Ubah pemasukan</string>
-    <string name="invalid">Judul dan isi catatan tidak boleh kosong.</string>
+    <string name="invalid">Data tidak boleh kosong.</string>
     <string name="lainnya">Opsi lainnya</string>
-    <string name="hapus_pemasukan">Hapus catatan</string>
+    <string name="hapus_pemasukan">Hapus data</string>
     <string name="pesan_hapus">Hapus data ini?</string>
     <string name="tombol_hapus">Hapus</string>
     <string name="tombol_batal">Batal</string>
     <string name="tanggal">Tanggal</string>
     <string name="nominal">Nominal</string>
     <string name="keterangan">Keterangan</string>
+    <string name="tambah_pengeluaran">Tambah Pengeluaran</string>
+    <string name="edit_pengeluaran">Edit Pengeluaran</string>
 </resources>

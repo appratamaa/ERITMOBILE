@@ -1,12 +1,12 @@
-package org.bumandhala.erit.database
+package org.bumandhala.eritmobile.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.bumandhala.erit.model.Pemasukan
+import org.bumandhala.eritmobile.model.Pemasukan
 
-@Database(entities = [Pemasukan::class], version = 1, exportSchema = false)
+@Database(entities = [Pemasukan::class], version = 2, exportSchema = false)
 abstract class CatatanDb : RoomDatabase() {
     abstract val dao: CatatanDao
     companion object {

@@ -1,4 +1,4 @@
-package org.bumandhala.erit
+package org.bumandhala.eritmobile
 
 import org.junit.Test
 

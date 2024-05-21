@@ -1,4 +1,4 @@
-package org.bumandhala.erit.ui.screen
+package org.bumandhala.eritmobile.ui.screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -53,13 +53,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import org.bumandhala.erit.R
-import org.bumandhala.erit.database.CatatanDb
-import org.bumandhala.erit.model.Pemasukan
-import org.bumandhala.erit.navigation.Screen
-import org.bumandhala.erit.ui.theme.ERITMOBILETheme
-import org.bumandhala.erit.util.SettingsDataStore
-import org.bumandhala.erit.util.ViewModelFactory
+import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.database.CatatanDb
+import org.bumandhala.eritmobile.model.Pemasukan
+import org.bumandhala.eritmobile.navigation.Screen
+import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
+import org.bumandhala.eritmobile.util.SettingsDataStore
+import org.bumandhala.eritmobile.util.ViewModelFactory
 import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -229,8 +229,8 @@ fun ScreenContent(modifier: Modifier, navController: NavHostController) {
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
                 items(data) {
-                    ListItem(pemasukan = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
+                    ListPemasukan(pemasukan = it) {
+                        navController.navigate(Screen.FormUbahPemasukan.withIdPemasukan(it.idPemasukan))
                     }
                 }
             }
@@ -347,7 +347,7 @@ fun CalendarIconAndDateTime() {
 }
 
 @Composable
-fun ListItem(pemasukan: Pemasukan, onClick: () -> Unit) {
+fun ListPemasukan(pemasukan: Pemasukan, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()

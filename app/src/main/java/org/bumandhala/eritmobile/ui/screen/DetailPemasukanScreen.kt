@@ -1,4 +1,4 @@
-package org.bumandhala.erit.ui.screen
+package org.bumandhala.eritmobile.ui.screen
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -38,27 +38,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import org.bumandhala.erit.R
-import org.bumandhala.erit.database.CatatanDb
-import org.bumandhala.erit.ui.theme.ERITMOBILETheme
-import org.bumandhala.erit.util.ViewModelFactory
+import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.database.CatatanDb
+import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
+import org.bumandhala.eritmobile.util.ViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-const val KEY_ID_CATATAN ="idCatatan"
+const val KEY_ID_PEMASUKAN ="idCatatan"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
+fun DetailPemasukanScreen(navController: NavHostController, idPemasukan: Long? = null) {
     val context = LocalContext.current
     val db = CatatanDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -70,8 +70,8 @@ fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
 
 
     LaunchedEffect(true) {
-        if (id == null) return@LaunchedEffect
-        val data = viewModel.getCatatan(id) ?: return@LaunchedEffect
+        if (idPemasukan == null) return@LaunchedEffect
+        val data = viewModel.getCatatanPemasukan(idPemasukan) ?: return@LaunchedEffect
         tanggal = data.tanggal
         nominal = data.nominal
         keterangan = data.keterangan
@@ -90,10 +90,10 @@ fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
                     }
                 },
                 title = {
-                    if (id == null)
-                        Text(text = stringResource(id = R.string.tambah_pemasukan), color = Color(0xFF20BCCB))
+                    if (idPemasukan == null)
+                        Text(text = stringResource(R.string.tambah_pemasukan), color = Color(0xFF20BCCB))
                     else
-                        Text(text = stringResource(id = R.string.edit_pemasukan), color = Color(0xFF20BCCB))
+                        Text(text = stringResource(R.string.edit_pemasukan), color = Color(0xFF20BCCB))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color.White
@@ -101,7 +101,7 @@ fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
             )
         }
     ) { padding ->
-        FormCatatan(
+        FormPemasukan(
             tanggal = tanggal,
             onTanggalChange = { tanggal = it },
             nominal = nominal,
@@ -109,7 +109,7 @@ fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
             keterangan = keterangan,
             onKeteranganChange = { keterangan = it },
             navController = navController, // Sertakan NavController di sini
-            id = id, // Sertakan id di sini
+            idPemasukan = idPemasukan, // Sertakan idPemasukan di sini
             viewModel = viewModel, // Sertakan viewModel di sini
             modifier = Modifier.padding(padding)
         )
@@ -117,12 +117,12 @@ fun DetailPemasukanScreen(navController: NavHostController, id: Long? = null) {
 }
 
 @Composable
-fun FormCatatan(
+fun FormPemasukan(
     tanggal: String, onTanggalChange: (String) -> Unit,
     nominal: Int, onNominalChange: (Int) -> Unit,
     keterangan: String, onKeteranganChange: (String) -> Unit,
     navController: NavHostController, // Tambahkan parameter navController
-    id: Long? = null, // Tambahkan parameter id
+    idPemasukan: Long? = null, // Tambahkan parameter id
     viewModel: DetailViewModel,
     modifier: Modifier
 ) {
@@ -140,11 +140,6 @@ fun FormCatatan(
             value = tanggal,
             onValueChange = { onTanggalChange(it) },
             label = { Text(text = stringResource(R.string.tanggal)) },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                imeAction = ImeAction.Next
-            ),
             modifier = modifier
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
@@ -155,11 +150,20 @@ fun FormCatatan(
                 }
         )
         OutlinedTextField(
-            value = nominal.toString(),
-            onValueChange = { newValue -> newValue.toIntOrNull()?.let { onNominalChange(it) } }, // Ubah String menjadi Int jika valid
+            value = if (nominal == 0) "" else nominal.toString(),
+            onValueChange = { newValue ->
+                val newIntValue = newValue.toIntOrNull()
+                if (newIntValue != null) {
+                    onNominalChange(newIntValue)
+                } else {
+                    if (newValue.isEmpty()) {
+                        onNominalChange(0)
+                    }
+                }
+            },
             label = { Text(text = stringResource(R.string.nominal)) },
             keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
+                keyboardType = KeyboardType.Number,
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -177,10 +181,10 @@ fun FormCatatan(
                 if (tanggal.isEmpty() || nominal == 0 || keterangan.isEmpty()) {
                     Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                 } else {
-                    if (id == null) {
-                        viewModel.insert(tanggal, nominal, keterangan)
+                    if (idPemasukan == null) {
+                        viewModel.insertPemasukan(tanggal, nominal, keterangan)
                     } else {
-                        viewModel.update(id, tanggal, nominal, keterangan)
+                        viewModel.updatePemasukan(idPemasukan, tanggal, nominal, keterangan)
                     }
                     navController.popBackStack()
                 }
@@ -190,7 +194,7 @@ fun FormCatatan(
             colors = ButtonDefaults.buttonColors(Color(0xFF20BCCB)) // Mengatur warna tombol menjadi biru
         ) {
             Text(
-                text = stringResource(id = R.string.simpan),
+                text = stringResource(R.string.simpan),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
                 fontSize = 18.sp
@@ -199,7 +203,7 @@ fun FormCatatan(
 
 
 
-        if (id != null) {
+        if (idPemasukan != null) {
             Button(
                 onClick = {
                     showDialog = true
@@ -209,7 +213,7 @@ fun FormCatatan(
                 colors = ButtonDefaults.buttonColors(Color(0xFF263AA2)) // Mengatur warna tombol menjadi biru
             ) {
                 Text(
-                    text = stringResource(id = R.string.tombol_hapus),
+                    text = stringResource(R.string.tombol_hapus),
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
                     fontSize = 18.sp
@@ -219,7 +223,7 @@ fun FormCatatan(
                 openDialog = showDialog,
                 onDismissRequest = { showDialog = false }) {
                 showDialog = false
-                viewModel.delete(id)
+                viewModel.deletePemasukan(idPemasukan)
                 navController.popBackStack()
             }
         }
@@ -239,10 +243,6 @@ fun showDatePicker(context: Context, onDateSelected: (String) -> Unit) {
         onDateSelected(selectedDate)
     }, year, month, day).show()
 }
-
-
-
-
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

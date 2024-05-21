@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "org.bumandhala.erit"
+    namespace = "org.bumandhala.eritmobile"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "org.bumandhala.erit"
+        applicationId = "org.bumandhala.eritmobile"
         minSdk = 23
         targetSdk = 34
         versionCode = 1

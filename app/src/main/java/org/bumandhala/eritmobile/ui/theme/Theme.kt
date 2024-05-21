@@ -1,4 +1,4 @@
-package org.bumandhala.erit.ui.theme
+package org.bumandhala.eritmobile.ui.theme
 
 import android.app.Activity
 import android.os.Build

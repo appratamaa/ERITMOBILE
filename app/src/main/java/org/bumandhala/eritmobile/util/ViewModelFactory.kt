@@ -1,10 +1,10 @@
-package org.bumandhala.erit.util
+package org.bumandhala.eritmobile.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.bumandhala.erit.database.CatatanDao
-import org.bumandhala.erit.ui.screen.DetailViewModel
-import org.bumandhala.erit.ui.screen.MainViewModel
+import org.bumandhala.eritmobile.database.CatatanDao
+import org.bumandhala.eritmobile.ui.screen.DetailViewModel
+import org.bumandhala.eritmobile.ui.screen.MainViewModel
 import java.lang.IllegalArgumentException
 
 class ViewModelFactory(

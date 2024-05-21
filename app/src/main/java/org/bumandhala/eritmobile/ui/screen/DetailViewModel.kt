@@ -1,47 +1,45 @@
-package org.bumandhala.erit.ui.screen
+package org.bumandhala.eritmobile.ui.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bumandhala.erit.database.CatatanDao
-import org.bumandhala.erit.model.Pemasukan
-import java.text.SimpleDateFormat
-import java.util.Locale
+import org.bumandhala.eritmobile.database.CatatanDao
+import org.bumandhala.eritmobile.model.Pemasukan
 
 class DetailViewModel(private val dao: CatatanDao): ViewModel() {
 
-    fun insert(tanggal: String, nominal: Int, keterangan: String) {
+    fun insertPemasukan(tanggal: String, nominal: Int, keterangan: String) {
         val pemasukan = Pemasukan(
             tanggal = tanggal,
             nominal = nominal,
             keterangan = keterangan
         )
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insert(pemasukan)
+            dao.insertPemasukan(pemasukan)
         }
     }
 
-    suspend fun getCatatan(id: Long): Pemasukan? {
-        return dao.getPemasukanById(id)
+    suspend fun getCatatanPemasukan(idPemasukan: Long): Pemasukan? {
+        return dao.getPemasukanById(idPemasukan)
     }
 
-    fun update(id: Long, tanggal: String, nominal: Int, keterangan: String) {
+    fun updatePemasukan(idPemasukan: Long, tanggal: String, nominal: Int, keterangan: String) {
         val catatan = Pemasukan(
-            id = id,
+            idPemasukan = idPemasukan,
             tanggal = tanggal,
             nominal = nominal,
             keterangan = keterangan
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            dao.update(catatan)
+            dao.updatePemasukan(catatan)
         }
     }
 
-    fun delete(id: Long) {
+    fun deletePemasukan(idPemasukan: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteByID(id)
+            dao.deletePemasukanByID(idPemasukan)
         }
     }
 }

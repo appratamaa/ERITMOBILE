@@ -1,4 +1,4 @@
-package org.bumandhala.erit.ui.theme
+package org.bumandhala.eritmobile.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
