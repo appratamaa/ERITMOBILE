@@ -1,5 +1,6 @@
 package org.bumandhala.eritmobile.ui.screen
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -390,7 +391,7 @@ fun ListItem(pemasukan: Pemasukan, onClick: () -> Unit) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun Screen2Preview() {
     ERITMOBILETheme {

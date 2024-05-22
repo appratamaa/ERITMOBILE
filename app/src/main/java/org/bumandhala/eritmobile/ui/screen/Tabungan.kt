@@ -120,9 +120,6 @@ fun Tabungan(navController: NavHostController) {
             }
         }
     ) { padding ->
-//        if (showDialog) {
-//            PopupTabungan(navController = navController, onDismiss = { showDialog = false })
-//        }
         Surface(color = Color.White) {
             // Menampilkan konten layar utama
             ContentTabungan(
@@ -134,94 +131,6 @@ fun Tabungan(navController: NavHostController) {
         }
     }
 }
-
-//@Composable
-//fun PopupTabungan(navController: NavController, onDismiss: () -> Unit) {
-//    var namaTabungan by remember { mutableStateOf("") }
-//    var targetTabungan by remember { mutableStateOf("") }
-//    var rencanaPengisian by remember { mutableStateOf("") }
-//    var nominalPengisian by remember { mutableStateOf("") }
-//
-//    val context = LocalContext.current
-//    val db = TabunganDb.getInstance(context)
-//    val factory = ViewModelFactoryTabungan(db.dao)
-//    val viewModel: MainViewModelTabungan = viewModel(factory = factory)
-//    val data by viewModel.data.collectAsState()
-//
-//    AlertDialog(
-//        onDismissRequest = {
-//            onDismiss() // Menyembunyikan dialog saat area di luar dialog diklik
-//        },
-//        title = {
-//            Text(text = stringResource(R.string.tambah_tabungan))
-//        },
-//        text = {
-//            Column {
-//                OutlinedTextField(
-//                    value = namaTabungan,
-//                    onValueChange = { namaTabungan = it },
-//                    label = { Text(text = stringResource(R.string.nama_tabungan))},
-//                    singleLine = true,
-//                    keyboardOptions = KeyboardOptions(
-//                        keyboardType = KeyboardType.Text,
-//                        imeAction = ImeAction.Next
-//                    ),
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//                OutlinedTextField(
-//                    value = targetTabungan,
-//                    onValueChange = { targetTabungan = it },
-//                    label = { Text(text = stringResource(R.string.target_tabungan))},
-//                    singleLine = true,
-//                    keyboardOptions = KeyboardOptions(
-//                        keyboardType = KeyboardType.Number,
-//                        imeAction = ImeAction.Next
-//                    ),
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//                OutlinedTextField(
-//                    value = rencanaPengisian,
-//                    onValueChange = { rencanaPengisian = it },
-//                    label = { Text(text = stringResource(R.string.rencana_pengisian))},
-//                    singleLine = true,
-//                    keyboardOptions = KeyboardOptions(
-//                        keyboardType = KeyboardType.Number,
-//                        imeAction = ImeAction.Next
-//                    ),
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//                OutlinedTextField(
-//                    value = nominalPengisian,
-//                    onValueChange = { nominalPengisian = it },
-//                    label = { Text(text = stringResource(R.string.nominal_pengisian))},
-//                    singleLine = true,
-//                    keyboardOptions = KeyboardOptions(
-//                        keyboardType = KeyboardType.Number,
-//                        imeAction = ImeAction.Done
-//                    ),
-//                    modifier = Modifier.fillMaxWidth()
-//                )
-//            }
-//        },
-//        confirmButton = {
-//            Button(onClick = {
-//
-//                onDismiss()
-//
-//            }) {
-//                Text(stringResource(R.string.simpan))
-//            }
-//        },
-//        dismissButton = {
-//            Button(onClick = {
-//                onDismiss()
-//                // Tambahkan logika untuk menangani klik tombol Batal di sini
-//            }) {
-//                Text(stringResource(R.string.tombol_batal))
-//            }
-//        }
-//    )
-//}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -259,7 +168,7 @@ fun ContentTabungan(modifier: Modifier, navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxSize()
 //                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .background(color = Color.White)
+                    .background(color = Color(0xFFE5E7EE))
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -376,8 +285,7 @@ fun ListItemTabungan(tabungan: Tabungan, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .clickable { onClick() }
-            .background(color = Color.White)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .background(color = Color.White),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -385,28 +293,27 @@ fun ListItemTabungan(tabungan: Tabungan, onClick: () -> Unit) {
             modifier = Modifier
                 .weight(1f)
                 .background(
-                    color = Color.LightGray,
-                    shape = RoundedCornerShape(5.dp)
+                    color = Color.White,
+                    shape = RoundedCornerShape(25.dp),
                 )
                 .graphicsLayer(
-                    shadowElevation = 4f, // change this line
-                    shape = RoundedCornerShape(5.dp),
+                    shadowElevation = 4f,
+                    shape = RoundedCornerShape(25.dp),
                     clip = true
                 )
-                .padding(8.dp)
+                .padding(16.dp, 12.dp)
         ) {
             Text(
                 text = tabungan.namatabungan,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center,
-                style = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black)
+                textAlign = TextAlign.Start,
+                style = TextStyle(fontWeight = FontWeight.Bold, color = Color.Black),
+                modifier = Modifier.padding(start = 2.dp)
             )
         }
     }
 }
-
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

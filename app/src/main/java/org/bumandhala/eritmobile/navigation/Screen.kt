@@ -1,5 +1,7 @@
 package org.bumandhala.eritmobile.navigation
 
+import androidx.annotation.StringRes
+import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_CATATAN
 
 sealed class Screen(val route: String) {
@@ -16,4 +18,5 @@ sealed class Screen(val route: String) {
     }
     data object Tabungan: Screen("tabungan")
     data object FormBaruTabungan: Screen("detailtabungan")
+
 }
