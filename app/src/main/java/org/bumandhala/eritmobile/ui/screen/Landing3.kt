@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.landingscreennavigation.Screen
+import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 
 
