@@ -11,7 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import org.bumandhala.eritmobile.ui.screen.DetailPemasukanScreen
 import org.bumandhala.eritmobile.ui.screen.DetailTabunganScreen
+import org.bumandhala.eritmobile.ui.screen.DetailTabunganTabungan
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_CATATAN
+import org.bumandhala.eritmobile.ui.screen.KEY_ID_TABUNGAN
 import org.bumandhala.eritmobile.ui.screen.Landing1
 import org.bumandhala.eritmobile.ui.screen.Landing2
 import org.bumandhala.eritmobile.ui.screen.Landing3
@@ -66,6 +68,15 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         }
         composable(route = Screen.FormBaruTabungan.route){
             DetailTabunganScreen(navController)
+        }
+        composable(
+            route = Screen.DetailTabunganTabungan.route,
+            arguments = listOf(
+                navArgument(KEY_ID_TABUNGAN) { type = NavType.LongType }
+            )
+        ) {navBackStackEntry ->
+            val id = navBackStackEntry.arguments?.getLong(KEY_ID_TABUNGAN)
+            DetailTabunganTabungan(navController,id)
         }
     }
 }

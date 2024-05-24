@@ -59,7 +59,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-const val KEY_ID_TABUNGAN ="idTabungan"
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,8 +99,6 @@ fun DetailTabunganScreen(navController: NavHostController, id: Long? = null) {
                 title = {
                     if (id == null)
                         Text(text = stringResource(id = R.string.tambah_tabungan), color = Color(0xFF20BCCB))
-                    else
-                        Text(text = stringResource(id = R.string.edit_pemasukan), color = Color(0xFF20BCCB))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = Color.White
@@ -192,12 +190,10 @@ fun FormTabungan(
         Button(
             onClick = {
                 if (namatabungan.isEmpty() || targettabungan == 0 || rencanapengisian == 0 || nominalpengisian == 0) {
-                    Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.invalid_tabungan, Toast.LENGTH_LONG).show()
                 } else {
                     if (id == null) {
                         viewModel.insert(namatabungan, targettabungan, rencanapengisian, nominalpengisian)
-                    } else {
-                        viewModel.update(id, namatabungan, targettabungan, rencanapengisian, nominalpengisian)
                     }
                     navController.popBackStack()
                 }

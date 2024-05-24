@@ -3,6 +3,7 @@ package org.bumandhala.eritmobile.navigation
 import androidx.annotation.StringRes
 import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_CATATAN
+import org.bumandhala.eritmobile.ui.screen.KEY_ID_TABUNGAN
 
 sealed class Screen(val route: String) {
     data object LandingScreen: Screen("landingScreen")
@@ -18,5 +19,8 @@ sealed class Screen(val route: String) {
     }
     data object Tabungan: Screen("tabungan")
     data object FormBaruTabungan: Screen("detailtabungan")
+    data object DetailTabunganTabungan: Screen("detailtabungantabungan/{$KEY_ID_TABUNGAN}") {
+        fun withId(id: Long) = "detailtabungantabungan/$id"
+    }
 
 }

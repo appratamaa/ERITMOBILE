@@ -177,7 +177,7 @@ fun FormCatatan(
         Button(
             onClick = {
                 if (tanggal.isEmpty() || nominal == 0 || keterangan.isEmpty()) {
-                    Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, R.string.invalid_tabungan, Toast.LENGTH_LONG).show()
                 } else {
                     if (id == null) {
                         viewModel.insert(tanggal, nominal, keterangan)

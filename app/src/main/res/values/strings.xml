@@ -38,12 +38,21 @@
     <string name="rencana_pengisian">Rencana Pengisian</string>
     <string name="nominal_pengisian">Nominal Pengisian</string>
 
+    <string name="tanggal_dibuat">Tanggal dibuat</string>
+    <string name="nominal_perbulan">Nominal perbulan</string>
+    <string name="estimasi_selesai">Estimasi selesai</string>
+    <string name="tanggal_berakhir">Tanggal berakhir</string>
+    <string name="total_tabungan">Total tabungan</string>
+    <string name="sisa">Sisa</string>
+    <string name="riwayat_tabungan">Riwayat Tabungan</string>
+    <string name="tanggal_menabung">Tanggal Menabung</string>
+
     <string name="judul">Judul</string>
     <string name="isi_catatan">Isi Catatan</string>
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
     <string name="edit_pemasukan">Ubah pemasukan</string>
-    <string name="invalid">Judul dan isi catatan tidak boleh kosong.</string>
+    <string name="invalid_tabungan">Data tabungan tidak boleh kosong.</string>
     <string name="lainnya">Opsi lainnya</string>
     <string name="hapus_pemasukan">Hapus catatan</string>
     <string name="pesan_hapus">Hapus data ini?</string>
