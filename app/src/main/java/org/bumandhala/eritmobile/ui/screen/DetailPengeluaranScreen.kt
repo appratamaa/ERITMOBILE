@@ -1,41 +1,26 @@
 package org.bumandhala.eritmobile.ui.screen
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
+import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,9 +36,11 @@ import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.database.CatatanDb
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.ViewModelFactory
+import coil.compose.rememberAsyncImagePainter
 
-const val KEY_ID_PENGELUARAN ="idCatatan"
+const val KEY_ID_PENGELUARAN = "idCatatan"
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Long? = null) {
@@ -65,7 +52,7 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
     var tanggal by remember { mutableStateOf("") }
     var nominal by remember { mutableIntStateOf(0) } // Ubah tipe data nominal menjadi Int
     var keterangan by remember { mutableStateOf("") }
-
+    var imagePath by remember { mutableStateOf<String?>(null) } // Tambahkan variabel untuk path gambar
 
     LaunchedEffect(true) {
         if (idPengeluaran == null) return@LaunchedEffect
@@ -73,6 +60,7 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
         tanggal = data.tanggal
         nominal = data.nominal
         keterangan = data.keterangan
+        imagePath = data.imagePath // Muat path gambar jika ada
     }
 
     Scaffold(
@@ -98,7 +86,7 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
                 )
             )
         }
-    ) { padding ->
+    ) {
         FormPengeluaran(
             tanggal = tanggal,
             onTanggalChange = { tanggal = it },
@@ -106,10 +94,12 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
             onNominalChange = { nominal = it },
             keterangan = keterangan,
             onKeteranganChange = { keterangan = it },
+            imagePath = imagePath,
+            onImagePathChange = { imagePath = it },
             navController = navController, // Sertakan NavController di sini
             idPengeluaran = idPengeluaran, // Sertakan idPengeluaran di sini
             viewModel = viewModel, // Sertakan viewModel di sini
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(top = 36.dp)
         )
     }
 }
@@ -120,20 +110,37 @@ fun FormPengeluaran(
     tanggal: String, onTanggalChange: (String) -> Unit,
     nominal: Int, onNominalChange: (Int) -> Unit,
     keterangan: String, onKeteranganChange: (String) -> Unit,
-    navController: NavHostController, // Tambahkan parameter navController
-    idPengeluaran: Long? = null, // Tambahkan parameter id
+    imagePath: String?, onImagePathChange: (String) -> Unit,
+    navController: NavHostController,
+    idPengeluaran: Long? = null,
     viewModel: DetailViewModel,
     modifier: Modifier
 ) {
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
-    var showDialog by remember { mutableStateOf(false) } // Variabel State
-
-    // Dropdown related states
+    var showDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
     val options = listOf("Makan", "Tagihan", "Transportasi", "Hiburan", "Lainnya")
     var selectedOption by remember { mutableStateOf(keterangan) }
     var lainnyaText by remember { mutableStateOf("") }
+
+    // Mendapatkan total pemasukan dan pengeluaran
+    var totalPemasukan by remember { mutableIntStateOf(0) }
+    var totalPengeluaran by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        totalPemasukan = viewModel.getTotalPemasukan()
+        totalPengeluaran = viewModel.getTotalPengeluaran()
+    }
+
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            // Lakukan sesuatu dengan URI foto yang dipilih
+            val filePath = getImageFilePath(context, it)
+            // Lakukan sesuatu dengan path berkas foto, seperti menyimpannya ke database
+            filePath?.let { onImagePathChange(it) }
+        }
+    }
 
     Column(
         modifier = modifier
@@ -173,7 +180,6 @@ fun FormPengeluaran(
             modifier = Modifier.fillMaxWidth()
         )
 
-        // ExposedDropdownMenuBox for keterangan
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
@@ -188,7 +194,7 @@ fun FormPengeluaran(
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 colors = ExposedDropdownMenuDefaults.textFieldColors(),
                 modifier = Modifier
-                    .menuAnchor() // Used for menu alignment
+                    .menuAnchor()
                     .fillMaxWidth()
             )
             ExposedDropdownMenu(
@@ -200,9 +206,8 @@ fun FormPengeluaran(
                         text = { Text(selectionOption) },
                         onClick = {
                             selectedOption = selectionOption
-                            onKeteranganChange(selectionOption) // Update the state in viewModel
+                            onKeteranganChange(selectionOption)
                             expanded = false
-                            // If "Lainnya" is selected, reset the lainnyaText
                             if (selectionOption != "Lainnya") {
                                 lainnyaText = ""
                             }
@@ -212,7 +217,6 @@ fun FormPengeluaran(
             }
         }
 
-        // Show TextField only when "Lainnya" is selected
         if (selectedOption == "Lainnya") {
             OutlinedTextField(
                 value = lainnyaText,
@@ -227,26 +231,53 @@ fun FormPengeluaran(
 
         Button(
             onClick = {
+                galleryLauncher.launch("image/*") // Buka galeri ketika tombol diklik
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
+            Text(text = "Unggah Foto Struk")
+        }
+
+        imagePath?.let {
+            Spacer(modifier = Modifier.height(16.dp))
+            Image(
+                painter = rememberAsyncImagePainter(it),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        Button(
+            onClick = {
                 val finalKeterangan = if (selectedOption == "Lainnya") lainnyaText else selectedOption
                 if (tanggal.isEmpty() || nominal == 0 || finalKeterangan.isEmpty()) {
                     Toast.makeText(context, R.string.invalid, Toast.LENGTH_LONG).show()
                 } else {
-                    if (idPengeluaran == null) {
-                        viewModel.insertPengeluaran(tanggal, nominal, finalKeterangan)
+                    if (totalPengeluaran + nominal > totalPemasukan) {
+                        Toast.makeText(context, "Pengeluaran melebihi pemasukan!", Toast.LENGTH_LONG).show()
                     } else {
-                        viewModel.updatePengeluaran(idPengeluaran, tanggal, nominal, finalKeterangan)
+                        if (idPengeluaran == null) {
+                            viewModel.insertPengeluaran(tanggal, nominal, finalKeterangan, imagePath)
+                        } else {
+                            viewModel.updatePengeluaran(idPengeluaran, tanggal, nominal, finalKeterangan, imagePath)
+                        }
+                        navController.popBackStack()
                     }
-                    navController.popBackStack()
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
-            colors = ButtonDefaults.buttonColors(Color(0xFF20BCCB)) // Mengatur warna tombol menjadi biru
+            shape = MaterialTheme.shapes.small,
+            colors = ButtonDefaults.buttonColors(Color(0xFF20BCCB))
         ) {
             Text(
                 text = stringResource(R.string.simpan),
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
+                fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
         }
@@ -257,13 +288,13 @@ fun FormPengeluaran(
                     showDialog = true
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
-                colors = ButtonDefaults.buttonColors(Color(0xFF263AA2)) // Mengatur warna tombol menjadi biru
+                shape = MaterialTheme.shapes.small,
+                colors = ButtonDefaults.buttonColors(Color(0xFF263AA2))
             ) {
                 Text(
                     text = stringResource(R.string.tombol_hapus),
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                    fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
+                    fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
             }
@@ -278,6 +309,15 @@ fun FormPengeluaran(
     }
 }
 
+fun getImageFilePath(context: Context, uri: Uri): String? {
+    val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor = context.contentResolver.query(uri, filePathColumn, null, null, null)
+    cursor?.moveToFirst()
+    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+    val filePath = columnIndex?.let { cursor.getString(it) }
+    cursor?.close()
+    return filePath
+}
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

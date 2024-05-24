@@ -19,4 +19,12 @@
     <string name="tambah_pengeluaran">Tambah Pengeluaran</string>
     <string name="edit_pengeluaran">Edit Pengeluaran</string>
     <string name="keterangan_lainnya">Lainnya</string>
+    <string name="tanggal_mulai">Tanggal Mulai</string>
+    <string name="tanggal_akhir">Tanggal Akhir</string>
+    <string name="no_data">Tidak ada data</string>
+    <string name="saldo">Saldo</string>
+    <string name="pemasukan">Pemasukan</string>
+    <string name="pengeluaran">Pengeluaran</string>
+    <string name="upload_gambar">Upload gambar</string>
+    <string name="ambil_foto">Ambil foto</string>
 </resources>

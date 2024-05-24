@@ -9,5 +9,6 @@ data class Pengeluaran(
     val idPengeluaran: Long = 0L,
     val tanggal: String,
     val nominal: Int,
-    val keterangan: String
+    val keterangan: String,
+    val imagePath: String? = null // Tambahkan properti baru
 )

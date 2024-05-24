@@ -17,13 +17,13 @@ class SettingsDataStore(private val context: Context) {
         private val IS_LIST = booleanPreferencesKey("is_list")
     }
 
-//    val layoutFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
-//        preferences[IS_LIST] ?: true
-//    }
-//
-//    suspend fun saveLayout(isList: Boolean) {
-//        context.dataStore.edit { prefereces ->
-//            prefereces[IS_LIST] = isList
-//        }
-//    }
+    val layoutFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[IS_LIST] ?: true
+    }
+
+    suspend fun saveLayout(isList: Boolean) {
+        context.dataStore.edit { prefereces ->
+            prefereces[IS_LIST] = isList
+        }
+    }
 }

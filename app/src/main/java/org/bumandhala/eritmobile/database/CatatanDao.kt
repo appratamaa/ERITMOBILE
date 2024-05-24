@@ -40,4 +40,9 @@ interface CatatanDao {
     @Query("DELETE FROM pengeluaran WHERE idPengeluaran = :idPengeluaran")
     suspend fun deletePengeluaranByID(idPengeluaran: Long)
 
+    @Query("SELECT SUM(nominal) FROM pemasukan")
+    suspend fun getTotalPemasukan(): Int
+
+    @Query("SELECT SUM(nominal) FROM pengeluaran")
+    suspend fun getTotalPengeluaran(): Int
 }

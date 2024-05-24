@@ -46,14 +46,15 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
 
 
     //PENGELUARAN
-    fun insertPengeluaran(tanggal: String, nominal: Int, keterangan: String) {
-        val pemasukan = Pengeluaran(
+    fun insertPengeluaran(tanggal: String, nominal: Int, keterangan: String, imagePath: String?) {
+        val pengeluaran = Pengeluaran(
             tanggal = tanggal,
             nominal = nominal,
-            keterangan = keterangan
+            keterangan = keterangan,
+            imagePath = imagePath // tambahkan imagePath di sini
         )
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertPengeluaran(pemasukan)
+            dao.insertPengeluaran(pengeluaran)
         }
     }
 
@@ -61,12 +62,19 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
         return dao.getPengeluaranById(idPengeluaran)
     }
 
-    fun updatePengeluaran(idPengeluaran: Long, tanggal: String, nominal: Int, keterangan: String) {
+    fun updatePengeluaran(
+        idPengeluaran: Long,
+        tanggal: String,
+        nominal: Int,
+        keterangan: String,
+        imagePath: String?
+    ) {
         val catatan = Pengeluaran(
             idPengeluaran = idPengeluaran,
             tanggal = tanggal,
             nominal = nominal,
-            keterangan = keterangan
+            keterangan = keterangan,
+            imagePath = imagePath // tambahkan imagePath di sini
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,5 +86,13 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             dao.deletePengeluaranByID(idPengeluaran)
         }
+    }
+
+    suspend fun getTotalPemasukan(): Int {
+        return dao.getTotalPemasukan()
+    }
+
+    suspend fun getTotalPengeluaran(): Int {
+        return dao.getTotalPengeluaran()
     }
 }

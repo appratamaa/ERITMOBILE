@@ -1,5 +1,6 @@
 package org.bumandhala.eritmobile.ui.screen
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.Configuration
@@ -56,6 +57,7 @@ import java.util.Locale
 
 const val KEY_ID_PEMASUKAN ="idCatatan"
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailPemasukanScreen(navController: NavHostController, idPemasukan: Long? = null) {
@@ -100,7 +102,7 @@ fun DetailPemasukanScreen(navController: NavHostController, idPemasukan: Long? =
                 )
             )
         }
-    ) { padding ->
+    ) {
         FormPemasukan(
             tanggal = tanggal,
             onTanggalChange = { tanggal = it },
@@ -111,7 +113,7 @@ fun DetailPemasukanScreen(navController: NavHostController, idPemasukan: Long? =
             navController = navController, // Sertakan NavController di sini
             idPemasukan = idPemasukan, // Sertakan idPemasukan di sini
             viewModel = viewModel, // Sertakan viewModel di sini
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(top = 36.dp)
         )
     }
 }
@@ -200,8 +202,6 @@ fun FormPemasukan(
                 fontSize = 18.sp
             )
         }
-
-
 
         if (idPemasukan != null) {
             Button(
