@@ -22,6 +22,7 @@ import org.bumandhala.eritmobile.ui.screen.Login
 import org.bumandhala.eritmobile.ui.screen.MainScreen
 import org.bumandhala.eritmobile.ui.screen.Register
 import org.bumandhala.eritmobile.ui.screen.Tabungan
+import org.bumandhala.eritmobile.ui.screen.TambahTabungan
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -77,6 +78,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         ) {navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_TABUNGAN)
             DetailTabunganTabungan(navController,id)
+        }
+        composable(route = Screen.Tambahtabungan.route){
+           TambahTabungan(navController)
         }
     }
 }

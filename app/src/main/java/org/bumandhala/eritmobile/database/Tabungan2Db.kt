@@ -5,25 +5,24 @@ import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.bumandhala.eritmobile.model.Pemasukan
-import org.bumandhala.eritmobile.model.Tabungan
+import org.bumandhala.eritmobile.model.Tabungan2
 
 @Dao
-@Database(entities = [Tabungan::class], version = 1, exportSchema = false)
-abstract class TabunganDb : RoomDatabase() {
-    abstract val dao: TabunganDao
+@Database(entities = [Tabungan2::class], version = 1, exportSchema = false)
+abstract class Tabungan2Db : RoomDatabase() {
+    abstract val dao: Tabungan2Dao
     companion object {
         @Volatile
-        private var INSTANCE: TabunganDb? = null
-        fun getInstance(context: Context): TabunganDb {
+        private var INSTANCE: Tabungan2Db? = null
+        fun getInstance(context: Context): Tabungan2Db {
             synchronized(this) {
                 var instance = INSTANCE
 
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        TabunganDb::class.java,
-                        "tabungan.db"
+                        Tabungan2Db::class.java,
+                        "tabungan2.db"
                     ).build()
                     INSTANCE = instance
                 }

@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -60,19 +59,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.database.TabunganDb
-import org.bumandhala.eritmobile.model.Tabungan
+import org.bumandhala.eritmobile.database.Tabungan2Db
+import org.bumandhala.eritmobile.model.Tabungan2
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.SettingsDataStore
-import org.bumandhala.eritmobile.util.ViewModelFactoryTabungan
+import org.bumandhala.eritmobile.util.ViewModelFactoryTabungan2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Tabungan(navController: NavHostController) {
     val poppinsblack = FontFamily(Font(R.font.poppinsblack))
-    var showDialog by remember { mutableStateOf(false) }
 
     SettingsDataStore(LocalContext.current)
 
@@ -128,9 +126,9 @@ fun Tabungan(navController: NavHostController) {
 @Composable
 fun ContentTabungan(modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
-    val db = TabunganDb.getInstance(context)
-    val factory = ViewModelFactoryTabungan(db.dao)
-    val viewModel: MainViewModelTabungan = viewModel(factory = factory)
+    val db = Tabungan2Db.getInstance(context)
+    val factory = ViewModelFactoryTabungan2(db.dao)
+    val viewModel: MainViewModelTabungan2 = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
 
     Column(
@@ -185,7 +183,7 @@ fun ContentTabungan(modifier: Modifier, navController: NavHostController) {
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
                 items(data) {
-                    ListItemTabungan(tabungan = it) {
+                    ListItemTabungan(tabungan2 = it) {
                         navController.navigate(Screen.DetailTabunganTabungan.withId(it.id))
                     }
                 }
@@ -272,7 +270,7 @@ fun ButtonTabungan(navController: NavHostController) {
     }
 }
 @Composable
-fun ListItemTabungan(tabungan: Tabungan, onClick: () -> Unit) {
+fun ListItemTabungan(tabungan2: Tabungan2, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -290,7 +288,7 @@ fun ListItemTabungan(tabungan: Tabungan, onClick: () -> Unit) {
                 .height(IntrinsicSize.Min)
         ) {
             Text(
-                text = tabungan.namatabungan,
+                text = tabungan2.namatabungan,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Start,

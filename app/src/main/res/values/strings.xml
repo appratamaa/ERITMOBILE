@@ -46,6 +46,11 @@
     <string name="sisa">Sisa</string>
     <string name="riwayat_tabungan">Riwayat Tabungan</string>
     <string name="tanggal_menabung">Tanggal Menabung</string>
+    <string name="hapus_tabungan">Hapus Tabungan</string>
+
+    <string name="ya">Ya</string>
+    <string name="tidak">Tidak</string>
+
 
     <string name="judul">Judul</string>
     <string name="isi_catatan">Isi Catatan</string>
@@ -55,7 +60,7 @@
     <string name="invalid_tabungan">Data tabungan tidak boleh kosong.</string>
     <string name="lainnya">Opsi lainnya</string>
     <string name="hapus_pemasukan">Hapus catatan</string>
-    <string name="pesan_hapus">Hapus data ini?</string>
+    <string name="pesan_hapus">Anda yakin akan menghapus data ini?</string>
     <string name="tombol_hapus">Hapus</string>
     <string name="tombol_batal">Batal</string>
     <string name="tanggal">Tanggal</string>

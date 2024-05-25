@@ -22,5 +22,6 @@ sealed class Screen(val route: String) {
     data object DetailTabunganTabungan: Screen("detailtabungantabungan/{$KEY_ID_TABUNGAN}") {
         fun withId(id: Long) = "detailtabungantabungan/$id"
     }
+    data object Tambahtabungan: Screen("tambahtabungan")
 
 }
