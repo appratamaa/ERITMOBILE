@@ -6,29 +6,30 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bumandhala.eritmobile.database.Tabungan2Dao
-import org.bumandhala.eritmobile.model.Tabungan2
+import org.bumandhala.eritmobile.database.TabunganScreenDao
+import org.bumandhala.eritmobile.model.Tabunganscreen
 
-class DetailViewModelTabungan2(private val dao: Tabungan2Dao): ViewModel() {
+class DetailViewModelTabunganScreen(private val dao: TabunganScreenDao): ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun insert(namatabungan: String, targettabungan: Int, rencanapengisian: Int, nominalpengisian: Int, tanggaltabungan: String,
-               tambahtabungan: Int) {
-        val tabungan2 = Tabungan2(
-            tanggaltabungan = tanggaltabungan,
+               rentangwaktu: String, tambahtabungan: Int) {
+        val tabunganscreen = Tabunganscreen(
             namatabungan = namatabungan,
             targettabungan = targettabungan,
             rencanapengisian = rencanapengisian,
             nominalpengisian = nominalpengisian,
-//            tambahtabungan = tambahtabungan
+            tanggaltabungan = tanggaltabungan,
+            rentangwaktu = rentangwaktu,
+            tambahtabungan = tambahtabungan
         )
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insert(tabungan2)
+            dao.insert(tabunganscreen)
         }
     }
 
-    suspend fun getTabungan2(id: Long): Tabungan2? {
-        return dao.getTabungan2ById(id)
+    suspend fun getTabunganScreen(id: Long): Tabunganscreen? {
+        return dao.getTabunganScreenById(id)
     }
 
 //    fun update(id: Long, namatabungan: String, targettabungan: Int, rencanapengisian: Int, nominalpengisian: Int) {
@@ -47,7 +48,7 @@ class DetailViewModelTabungan2(private val dao: Tabungan2Dao): ViewModel() {
 
     fun delete(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.deleteTabungan2ByID(id)
+            dao.deleteTabunganScreenByID(id)
         }
     }
 }

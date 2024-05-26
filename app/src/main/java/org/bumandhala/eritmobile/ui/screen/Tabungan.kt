@@ -59,12 +59,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.database.Tabungan2Db
-import org.bumandhala.eritmobile.model.Tabungan2
+import org.bumandhala.eritmobile.database.TabunganScreenDb
+import org.bumandhala.eritmobile.model.Tabunganscreen
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.SettingsDataStore
-import org.bumandhala.eritmobile.util.ViewModelFactoryTabungan2
+import org.bumandhala.eritmobile.util.ViewModelFactoryTabunganScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -126,9 +126,9 @@ fun Tabungan(navController: NavHostController) {
 @Composable
 fun ContentTabungan(modifier: Modifier, navController: NavHostController) {
     val context = LocalContext.current
-    val db = Tabungan2Db.getInstance(context)
-    val factory = ViewModelFactoryTabungan2(db.dao)
-    val viewModel: MainViewModelTabungan2 = viewModel(factory = factory)
+    val db = TabunganScreenDb.getInstance(context)
+    val factory = ViewModelFactoryTabunganScreen(db.dao)
+    val viewModel: MainViewModelTabunganScreen = viewModel(factory = factory)
     val data by viewModel.data.collectAsState()
 
     Column(
@@ -183,7 +183,7 @@ fun ContentTabungan(modifier: Modifier, navController: NavHostController) {
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
                 items(data) {
-                    ListItemTabungan(tabungan2 = it) {
+                    ListItemTabungan(tabunganscreen = it) {
                         navController.navigate(Screen.DetailTabunganTabungan.withId(it.id))
                     }
                 }
@@ -270,7 +270,7 @@ fun ButtonTabungan(navController: NavHostController) {
     }
 }
 @Composable
-fun ListItemTabungan(tabungan2: Tabungan2, onClick: () -> Unit) {
+fun ListItemTabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -288,7 +288,7 @@ fun ListItemTabungan(tabungan2: Tabungan2, onClick: () -> Unit) {
                 .height(IntrinsicSize.Min)
         ) {
             Text(
-                text = tabungan2.namatabungan,
+                text = tabunganscreen.namatabungan,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 textAlign = TextAlign.Start,

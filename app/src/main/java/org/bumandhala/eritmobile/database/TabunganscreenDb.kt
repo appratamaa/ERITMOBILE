@@ -5,24 +5,24 @@ import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.bumandhala.eritmobile.model.Tabungan2
+import org.bumandhala.eritmobile.model.Tabunganscreen
 
 @Dao
-@Database(entities = [Tabungan2::class], version = 1, exportSchema = false)
-abstract class Tabungan2Db : RoomDatabase() {
-    abstract val dao: Tabungan2Dao
+@Database(entities = [Tabunganscreen::class], version = 1, exportSchema = false)
+abstract class TabunganScreenDb : RoomDatabase() {
+    abstract val dao: TabunganScreenDao
     companion object {
         @Volatile
-        private var INSTANCE: Tabungan2Db? = null
-        fun getInstance(context: Context): Tabungan2Db {
+        private var INSTANCE: TabunganScreenDb? = null
+        fun getInstance(context: Context): TabunganScreenDb {
             synchronized(this) {
                 var instance = INSTANCE
 
                 if (instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        Tabungan2Db::class.java,
-                        "tabungan2.db"
+                        TabunganScreenDb::class.java,
+                        "tabunganscreen.db"
                     ).build()
                     INSTANCE = instance
                 }

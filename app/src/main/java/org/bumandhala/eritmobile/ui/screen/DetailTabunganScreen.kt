@@ -6,12 +6,17 @@ import android.content.res.Configuration
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -20,7 +25,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +39,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -50,13 +58,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.database.Tabungan2Db
+import org.bumandhala.eritmobile.database.TabunganScreenDb
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
-import org.bumandhala.eritmobile.util.ViewModelFactoryTabungan2
+import org.bumandhala.eritmobile.util.ViewModelFactoryTabunganScreen
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import kotlin.math.tan
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,26 +71,28 @@ import kotlin.math.tan
 @Composable
 fun DetailTabunganScreen(navController: NavHostController, id: Long? = null) {
     val context = LocalContext.current
-    val db = Tabungan2Db.getInstance(context)
-    val factory = ViewModelFactoryTabungan2(db.dao)
-    val viewModel: DetailViewModelTabungan2 = viewModel(factory = factory)
+    val db = TabunganScreenDb.getInstance(context)
+    val factory = ViewModelFactoryTabunganScreen(db.dao)
+    val viewModel: DetailViewModelTabunganScreen = viewModel(factory = factory)
 
     var tanggaltabungan by remember { mutableStateOf("") }
     var namaTabungan by remember { mutableStateOf("") }
     var targetTabungan by remember { mutableIntStateOf(0) } // Ubah tipe data nominal menjadi Int
     var rencanaPengisian by remember { mutableIntStateOf(0) }
     var nominalPengisian by remember { mutableIntStateOf(0) }
+    var rentangwaktu by remember { mutableStateOf("") }
     var tambahtabungan by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(true) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getTabungan2(id) ?: return@LaunchedEffect
-        tanggaltabungan = tanggaltabungan
+        val data = viewModel.getTabunganScreen(id) ?: return@LaunchedEffect
+        tanggaltabungan = data.tanggaltabungan
         namaTabungan = data.namatabungan
         targetTabungan = data.targettabungan
         rencanaPengisian = data.rencanapengisian
         nominalPengisian = data.nominalpengisian
-//        tambahtabungan = data.tambahtabungan
+        rentangwaktu = data.rentangwaktu
+        tambahtabungan = data.tambahtabungan
     }
 
     Scaffold(
@@ -109,8 +118,8 @@ fun DetailTabunganScreen(navController: NavHostController, id: Long? = null) {
         }
     ) { padding ->
         FormTabungan(
-            tanggal = tanggaltabungan,
-            ontanggalChange = { tanggaltabungan = it },
+            tanggaltabungan = tanggaltabungan,
+            ontanggaltabunganChange = { tanggaltabungan = it },
             namatabungan = namaTabungan,
             onnamatabunganChange = { namaTabungan = it },
             targettabungan = targetTabungan,
@@ -119,6 +128,8 @@ fun DetailTabunganScreen(navController: NavHostController, id: Long? = null) {
             onrencanapengisianChange = { rencanaPengisian = it },
             nominalpengisian = nominalPengisian,
             onnominalpengisianChange = { nominalPengisian = it },
+            rentangwaktu = rentangwaktu,
+            onrentangwaktuChange = { rentangwaktu = it },
             tambahtabungan = tambahtabungan,
             ontambahtabunganChange = { tambahtabungan = it },
             navController = navController, // Sertakan NavController di sini
@@ -132,15 +143,16 @@ fun DetailTabunganScreen(navController: NavHostController, id: Long? = null) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FormTabungan(
-    tanggal: String, ontanggalChange: (String) -> Unit,
+    tanggaltabungan: String, ontanggaltabunganChange: (String) -> Unit,
     namatabungan: String, onnamatabunganChange: (String) -> Unit,
     targettabungan: Int, ontargettabunganChange: (Int) -> Unit,
     rencanapengisian: Int, onrencanapengisianChange: (Int) -> Unit,
     nominalpengisian: Int, onnominalpengisianChange: (Int) -> Unit,
+    rentangwaktu: String, onrentangwaktuChange: (String) -> Unit,
     tambahtabungan: Int, ontambahtabunganChange: (Int) -> Unit,
     navController: NavHostController, // Tambahkan parameter navController
     id: Long? = null, // Tambahkan parameter id
-    viewModel: DetailViewModelTabungan2,
+    viewModel: DetailViewModelTabunganScreen,
     modifier: Modifier
 ) {
     val context = LocalContext.current
@@ -148,12 +160,13 @@ fun FormTabungan(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         OutlinedTextField(
-            value = tanggal,
-            onValueChange = { ontanggalChange(it) },
+            value = tanggaltabungan,
+            onValueChange = { ontanggaltabunganChange(it) },
             label = { Text(text = stringResource(R.string.tanggal)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(
@@ -165,7 +178,7 @@ fun FormTabungan(
                 .focusRequester(focusRequester)
                 .onFocusChanged { focusState ->
                     if (focusState.isFocused) {
-                        showDatePickerTabungan(context, ontanggalChange)
+                        showDatePickerTabungan(context, ontanggaltabunganChange)
                     }
                 }
         )
@@ -199,6 +212,33 @@ fun FormTabungan(
             ),
             modifier = Modifier.fillMaxWidth()
         )
+        OutlinedCard(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp)
+        )
+        {
+            Column {
+                listOf(
+                    "Hari",
+                    "Minggu",
+                    "Bulan",
+                ).forEach { classOption ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.clickable { onrentangwaktuChange(classOption) }
+                    ) {
+                        RadioButton(
+                            selected = classOption == rentangwaktu,
+                            onClick = { onrentangwaktuChange(classOption) }
+                        )
+                        Text(
+                            text = classOption,
+                            modifier = Modifier.padding(start = 8.dp)
+                        )
+                    }
+                }
+            }
+        }
         OutlinedTextField(
             value = nominalpengisian.toString(),
             onValueChange = { newValue -> newValue.toIntOrNull()?.let { onnominalpengisianChange(it) } }, // Ubah String menjadi Int jika valid
@@ -209,33 +249,42 @@ fun FormTabungan(
             ),
             modifier = Modifier.fillMaxWidth()
         )
-        Button(
-            onClick = {
-                if (namatabungan.isEmpty() || targettabungan == 0 || rencanapengisian == 0 || nominalpengisian == 0) {
-                    Toast.makeText(context, R.string.invalid_tabungan, Toast.LENGTH_LONG).show()
-                } else {
-                    if (id == null) {
-                        viewModel.insert(namatabungan, targettabungan, rencanapengisian, nominalpengisian, tanggal, tambahtabungan)
-                    }
-                    navController.popBackStack()
-                }
-            },
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
-            colors = ButtonDefaults.buttonColors(Color(0xFF20BCCB)) // Mengatur warna tombol menjadi biru
+            horizontalArrangement = Arrangement.spacedBy(8.dp) // Menambahkan jarak antara tombol
         ) {
-            Text(
-                text = stringResource(id = R.string.simpan),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
-                fontSize = 18.sp
-            )
-        }
             Button(
                 onClick = {
-                   navController.popBackStack()
+                    if (namatabungan.isEmpty() || targettabungan == 0 || rencanapengisian == 0 || nominalpengisian == 0) {
+                        Toast.makeText(context, R.string.invalid_tabungan, Toast.LENGTH_LONG).show()
+                    } else {
+                        if (id == null) {
+                            viewModel.insert(namatabungan, targettabungan, rencanapengisian, nominalpengisian, tanggaltabungan, rentangwaktu, tambahtabungan)
+                        }
+                        navController.popBackStack()
+                    }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .weight(1f) // Membagi lebar secara merata
+                    .padding(vertical = 8.dp),
+                shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
+                colors = ButtonDefaults.buttonColors(Color(0xFF20BCCB)) // Mengatur warna tombol menjadi biru
+            ) {
+                Text(
+                    text = stringResource(id = R.string.simpan),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
+                    fontSize = 18.sp
+                )
+            }
+
+            Button(
+                onClick = {
+                    navController.popBackStack()
+                },
+                modifier = Modifier
+                    .weight(1f) // Membagi lebar secara merata
+                    .padding(vertical = 8.dp),
                 shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
                 colors = ButtonDefaults.buttonColors(Color(0xFF263AA2)) // Mengatur warna tombol menjadi biru
             ) {
@@ -245,7 +294,9 @@ fun FormTabungan(
                     fontWeight = FontWeight.Bold, // Mengatur teks menjadi tebal
                     fontSize = 18.sp
                 )
+            }
         }
+
     }
 }
 fun showDatePickerTabungan(context: Context, onDateSelected: (String) -> Unit) {

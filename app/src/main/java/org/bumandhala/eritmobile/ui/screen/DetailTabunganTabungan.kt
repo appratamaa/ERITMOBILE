@@ -59,11 +59,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
-import org.bumandhala.eritmobile.database.Tabungan2Db
-import org.bumandhala.eritmobile.model.Tabungan2
+import org.bumandhala.eritmobile.database.TabunganScreenDb
+import org.bumandhala.eritmobile.model.Tabunganscreen
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
-import org.bumandhala.eritmobile.util.ViewModelFactoryTabungan2
+import org.bumandhala.eritmobile.util.ViewModelFactoryTabunganScreen
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -74,38 +74,41 @@ const val KEY_ID_TABUNGAN ="idTabungan"
 @Composable
 fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
     val context = LocalContext.current
-    val db = Tabungan2Db.getInstance(context)
-    val factory = ViewModelFactoryTabungan2(db.dao)
-    val viewModel: DetailViewModelTabungan2 = viewModel(factory = factory)
+    val db = TabunganScreenDb.getInstance(context)
+    val factory = ViewModelFactoryTabunganScreen(db.dao)
+    val viewModel: DetailViewModelTabunganScreen = viewModel(factory = factory)
 
-    var tanggal by remember { mutableStateOf("") }
+    var tanggaltabungan by remember { mutableStateOf("") }
     var namaTabungan by remember { mutableStateOf("") }
     var targetTabungan by remember { mutableIntStateOf(0) } // Ubah tipe data nominal menjadi Int
     var rencanaPengisian by remember { mutableIntStateOf(0) }
     var nominalPengisian by remember { mutableIntStateOf(0) }
+    var rentangwaktu by remember { mutableStateOf("") }
     var tambahtabungan by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(true) {
         if (id == null) return@LaunchedEffect
-        val data = viewModel.getTabungan2(id) ?: return@LaunchedEffect
-        tanggal = data.tanggaltabungan
+        val data = viewModel.getTabunganScreen(id) ?: return@LaunchedEffect
+        tanggaltabungan = data.tanggaltabungan
         namaTabungan = data.namatabungan
         targetTabungan = data.targettabungan
         rencanaPengisian = data.rencanapengisian
         nominalPengisian = data.nominalpengisian
-//        tambahtabungan = data.tambahtabungan
+        rentangwaktu = data.rentangwaktu
+        tambahtabungan = data.tambahtabungan
     }
     val currentDate = remember { LocalDate.now() }
     val formattedDate = remember {
         currentDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy"))
     }
-    val tabungan2 = Tabungan2(
-        tanggaltabungan = tanggal,
+    val tabunganscreen = Tabunganscreen(
+        tanggaltabungan = tanggaltabungan,
         namatabungan = namaTabungan,
         targettabungan = targetTabungan,
         rencanapengisian = rencanaPengisian,
         nominalpengisian = nominalPengisian,
-//        tambahtabungan = tambahtabungan
+        rentangwaktu = rentangwaktu,
+        tambahtabungan = tambahtabungan
     )
 
 
@@ -141,8 +144,8 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
         )
 
         FormTabunganTabungan(
-            tanggal = tanggal,
-            ontanggalChange = { tanggal = it },
+            tanggaltabungan = tanggaltabungan,
+            ontanggaltabunganChange = { tanggaltabungan = it },
             namatabungan = namaTabungan,
             onnamatabunganChange = { namaTabungan = it },
             targettabungan = targetTabungan,
@@ -151,6 +154,8 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
             onrencanapengisianChange = { rencanaPengisian = it },
             nominalpengisian = nominalPengisian,
             onnominalpengisianChange = { nominalPengisian = it },
+            rentangwaktu = rentangwaktu,
+            onrentangwaktuChange = { rentangwaktu = it },
             tambahtabungan = tambahtabungan,
             ontambahtabunganChange = { tambahtabungan = it },
             navController = navController,
@@ -158,7 +163,7 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            tabungan2 = tabungan2,
+            tabunganscreen = tabunganscreen,
             currentDate = formattedDate
         )
     }
@@ -168,16 +173,17 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun FormTabunganTabungan(
-    tanggal: String, ontanggalChange: (String) -> Unit,
+    tanggaltabungan: String, ontanggaltabunganChange: (String) -> Unit,
     namatabungan: String, onnamatabunganChange: (String) -> Unit,
     targettabungan: Int, ontargettabunganChange: (Int) -> Unit,
     rencanapengisian: Int, onrencanapengisianChange: (Int) -> Unit,
     nominalpengisian: Int, onnominalpengisianChange: (Int) -> Unit,
+    rentangwaktu: String, onrentangwaktuChange: (String) -> Unit,
     tambahtabungan: Int, ontambahtabunganChange: (Int) -> Unit,
     navController: NavHostController, // Tambahkan parameter navController
     id: Long? = null, // Tambahkan parameter id
     modifier: Modifier,
-    tabungan2: Tabungan2,
+    tabunganscreen: Tabunganscreen,
     currentDate: String
 ) {
     Column(
@@ -214,7 +220,7 @@ fun FormTabunganTabungan(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = tabungan2.namatabungan,
+                    text = tabunganscreen.namatabungan,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Center,
@@ -228,10 +234,9 @@ fun FormTabunganTabungan(
             }
         }
         val context = LocalContext.current
-        val db = Tabungan2Db.getInstance(context)
-        val factory = ViewModelFactoryTabungan2(db.dao)
-        val viewModel: MainViewModelTabungan2 = viewModel(factory = factory)
-        var showDialog by remember { mutableStateOf(false) } // Variabel State
+        val db = TabunganScreenDb.getInstance(context)
+        val factory = ViewModelFactoryTabunganScreen(db.dao)
+        val viewModel: MainViewModelTabunganScreen = viewModel(factory = factory)
         val data by viewModel.data.collectAsState()
         Column(
             modifier = modifier
@@ -253,7 +258,7 @@ fun FormTabunganTabungan(
                     .fillMaxSize(),
             ) {
                 Text(
-                    text = stringResource(R.string.tanggal_dibuat) + "                                ${(tanggal)}",
+                    text = stringResource(R.string.tanggal_dibuat) + "                                ${(tanggaltabungan)}",
                     modifier = Modifier.padding(start = 26.dp, top = 24.dp),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
@@ -269,7 +274,7 @@ fun FormTabunganTabungan(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = stringResource(R.string.estimasi_selesai) + "                             ${(rencanapengisian)} Bulan",
+                    text = stringResource(R.string.estimasi_selesai) + "                             ${(rencanapengisian)} ${(rentangwaktu)} ",
                     modifier = Modifier.padding(start = 26.dp, top = 6.dp),
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
@@ -312,7 +317,7 @@ fun FormTabunganTabungan(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "Rp ${formatRupiah(rencanapengisian)}",
+                        text = "${(rencanapengisian)}",
                         color = Color(0xFFD84141),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -375,7 +380,7 @@ fun FormTabunganTabungan(
                                     text = stringResource(R.string.tanggal_menabung) + "                        " + stringResource(
                                         R.string.nominal
                                     ),
-                                    modifier = Modifier.padding(start = 26.dp, top = 12.dp),
+                                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 14.sp
@@ -390,16 +395,16 @@ fun FormTabunganTabungan(
                         contentPadding = PaddingValues(bottom = 84.dp)
                     ) {
                         items(data) {
-                            ListItemTambahtabungan(tabungan2 = it) {
+                            ListItemTambahtabungan(tabunganscreen = it) {
                             }
                         }
                     }
 
                 }
                 val context = LocalContext.current
-                val db = Tabungan2Db.getInstance(context)
-                val factory = ViewModelFactoryTabungan2(db.dao)
-                val viewModel: DetailViewModelTabungan2 = viewModel(factory = factory)
+                val db = TabunganScreenDb.getInstance(context)
+                val factory = ViewModelFactoryTabunganScreen(db.dao)
+                val viewModel: DetailViewModelTabunganScreen = viewModel(factory = factory)
                 var showDialog by remember { mutableStateOf(false) } // Variabel State
                 Spacer(modifier = Modifier.height(16.dp)) // Spacer untuk memberikan ruang di antara konten dan tombol
                 // Tombol Simpan
@@ -411,7 +416,8 @@ fun FormTabunganTabungan(
                         onClick = {
                             navController.navigate(Screen.Tambahtabungan.route)
                         },
-                        modifier = Modifier.fillMaxWidth(0.49f)
+                        modifier = Modifier
+                            .fillMaxWidth(0.49f)
                             .padding(8.dp), // Mengisi 45% lebar layar
                         shape = RoundedCornerShape(5.dp),
                         colors = ButtonDefaults.buttonColors(Color(0xFFFAC36A))
@@ -436,7 +442,8 @@ fun FormTabunganTabungan(
                             onClick = {
                                 showDialog = true
                             },
-                            modifier = Modifier.fillMaxWidth(0.95f)
+                            modifier = Modifier
+                                .fillMaxWidth(0.95f)
                                 .padding(8.dp), // Mengisi 45% lebar layar
                             shape = RoundedCornerShape(5.dp),
                             colors = ButtonDefaults.buttonColors(Color(0xFFD84141)) // Mengatur warna tombol menjadi merah
@@ -471,7 +478,7 @@ fun FormTabunganTabungan(
 
 }
 @Composable
-fun ListItemTambahtabungan(tabungan2: Tabungan2, onClick: () -> Unit) {
+fun ListItemTambahtabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxSize()
@@ -482,16 +489,20 @@ fun ListItemTambahtabungan(tabungan2: Tabungan2, onClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
-            text = tabungan2.nominalpengisian.toString(),
-            modifier = Modifier.weight(1f).padding(start = 40.dp),
+            text = tabunganscreen.tanggaltabungan,
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 40.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Start,
             fontSize = 16.sp,
         )
         Text(
-            text = tabungan2.targettabungan.toString(),
-            modifier = Modifier.weight(1f).padding(start = 92.dp),
+            text = "Rp ${formatRupiah(tabunganscreen.tambahtabungan)}",
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 62.dp),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             textAlign = TextAlign.Start,
