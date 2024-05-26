@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -52,7 +53,7 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
     var tanggal by remember { mutableStateOf("") }
     var nominal by remember { mutableIntStateOf(0) } // Ubah tipe data nominal menjadi Int
     var keterangan by remember { mutableStateOf("") }
-    var imagePath by remember { mutableStateOf<String?>(null) } // Tambahkan variabel untuk path gambar
+    var imagePath by remember { mutableStateOf<String?>("") } // Tambahkan variabel untuk path gambar
 
     LaunchedEffect(true) {
         if (idPengeluaran == null) return@LaunchedEffect
@@ -60,7 +61,7 @@ fun DetailPengeluaranScreen(navController: NavHostController, idPengeluaran: Lon
         tanggal = data.tanggal
         nominal = data.nominal
         keterangan = data.keterangan
-        imagePath = data.imagePath // Muat path gambar jika ada
+        imagePath = data.imagePath
     }
 
     Scaffold(
@@ -133,11 +134,11 @@ fun FormPengeluaran(
         totalPengeluaran = viewModel.getTotalPengeluaran()
     }
 
+    // Memilih gambar dari galeri
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
-            // Lakukan sesuatu dengan URI foto yang dipilih
             val filePath = getImageFilePath(context, it)
-            // Lakukan sesuatu dengan path berkas foto, seperti menyimpannya ke database
+            Log.d("FormPengeluaran", "Selected image file path: $filePath")
             filePath?.let { onImagePathChange(it) }
         }
     }
@@ -310,14 +311,18 @@ fun FormPengeluaran(
 }
 
 fun getImageFilePath(context: Context, uri: Uri): String? {
-    val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-    val cursor = context.contentResolver.query(uri, filePathColumn, null, null, null)
-    cursor?.moveToFirst()
-    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
-    val filePath = columnIndex?.let { cursor.getString(it) }
-    cursor?.close()
+    var filePath: String? = null
+    val projection = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor = context.contentResolver.query(uri, projection, null, null, null)
+    if (cursor != null) {
+        val columnIndex = cursor.getColumnIndexOrThrow(projection[0])
+        cursor.moveToFirst()
+        filePath = cursor.getString(columnIndex)
+        cursor.close()
+    }
     return filePath
 }
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

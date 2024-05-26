@@ -3,6 +3,7 @@ package org.bumandhala.eritmobile.ui.screen
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -23,15 +24,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -131,8 +129,10 @@ fun MainScreen(navController: NavHostController) {
                     onClick = { /* Tindakan saat tombol pertama diklik */ }
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_home_filled_24), // Ganti dengan ikon Anda
-                        contentDescription = "Beranda"
+                        painter = painterResource(R.drawable.home), // Ganti dengan ikon Anda
+                        contentDescription = "Beranda",
+                        modifier = Modifier
+                            .size(28.dp),
                     )
                 }
 
@@ -191,6 +191,11 @@ fun ScreenContent(
     val viewModel: MainViewModel = viewModel(factory = factory)
     val pemasukanData by viewModel.pemasukanData.collectAsState()
     val pengeluaranData by viewModel.pengeluaranData.collectAsState()
+
+    // Pastikan Anda mengatur data yang benar dari ViewModel
+    // Log untuk memastikan data ada setelah aplikasi dimulai ulang
+    Log.d("ScreenContent", "Pemasukan data: $pemasukanData")
+    Log.d("ScreenContent", "Pengeluaran data: $pengeluaranData")
 
     val totalPemasukan = pemasukanData.sumOf { it.nominal }
     val totalPengeluaran = pengeluaranData.sumOf { it.nominal }
@@ -325,6 +330,7 @@ fun ScreenContent(
         }
     }
 }
+
 
 
 
@@ -508,6 +514,7 @@ fun ListPengeluaran(pengeluaran: Pengeluaran, onClick: () -> Unit) {
                 .clickable {
                     pengeluaran.imagePath?.let { imagePath ->
                         // Tampilkan dialog saat ikon diklik
+                        Log.d("ListPengeluaran", "Jalur gambar: $imagePath")
                         showDialog.value = true
                     }
                 }
@@ -524,6 +531,7 @@ fun ListPengeluaran(pengeluaran: Pengeluaran, onClick: () -> Unit) {
 @Composable
 fun ShowStrukDialog(imagePath: String, onClose: () -> Unit) {
     val bitmap = loadImageFromPath(imagePath)
+    Log.d("ShowStrukDialog", "Menampilkan gambar dari jalur: $imagePath")
 
     AlertDialog(
         onDismissRequest = { onClose() },
@@ -532,6 +540,8 @@ fun ShowStrukDialog(imagePath: String, onClose: () -> Unit) {
             bitmap?.let {
                 val imageBitmap = it.asImageBitmap()
                 Image(bitmap = imageBitmap, contentDescription = "Gambar Struk")
+            } ?: run {
+                Text(text = "Gambar tidak ditemukan")
             }
         },
         confirmButton = {
@@ -543,6 +553,7 @@ fun ShowStrukDialog(imagePath: String, onClose: () -> Unit) {
         }
     )
 }
+
 
 
 fun loadImageFromPath(path: String): Bitmap? {

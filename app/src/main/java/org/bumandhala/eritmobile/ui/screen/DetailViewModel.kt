@@ -1,5 +1,6 @@
 package org.bumandhala.eritmobile.ui.screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +48,7 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
 
     //PENGELUARAN
     fun insertPengeluaran(tanggal: String, nominal: Int, keterangan: String, imagePath: String?) {
+        Log.d("DetailViewModel", "Inserting pengeluaran with imagePath: $imagePath")
         val pengeluaran = Pengeluaran(
             tanggal = tanggal,
             nominal = nominal,
@@ -69,6 +71,7 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
         keterangan: String,
         imagePath: String?
     ) {
+        Log.d("DetailViewModel", "Updating pengeluaran with imagePath: $imagePath")
         val catatan = Pengeluaran(
             idPengeluaran = idPengeluaran,
             tanggal = tanggal,

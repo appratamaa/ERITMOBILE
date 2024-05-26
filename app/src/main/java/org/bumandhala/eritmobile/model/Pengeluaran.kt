@@ -10,5 +10,5 @@ data class Pengeluaran(
     val tanggal: String,
     val nominal: Int,
     val keterangan: String,
-    val imagePath: String? = null // Tambahkan properti baru
+    val imagePath: String? // Tambahkan properti baru
 )
