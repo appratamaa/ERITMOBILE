@@ -188,8 +188,8 @@ fun FormTambahtabungan(
                 if (tambahtabungan == 0) {
                     Toast.makeText(context, R.string.invalid_tabungan, Toast.LENGTH_LONG).show()
                 } else {
-                    if (id == null) {
-                        viewModel.insert(namatabungan, targettabungan, rencanapengisian, nominalpengisian, tanggaltabungan, rentangwaktu, tambahtabungan)
+                    if (id != null) {
+                        viewModel.updatetabungan(id, namatabungan, targettabungan, rencanapengisian, nominalpengisian, tanggaltabungan, rentangwaktu, tambahtabungan)
                     }
                     navController.popBackStack()
                 }

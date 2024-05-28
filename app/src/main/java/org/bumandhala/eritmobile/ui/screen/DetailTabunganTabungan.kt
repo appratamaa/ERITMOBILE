@@ -308,7 +308,7 @@ fun FormTabunganTabungan(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Rp ${formatRupiah(targettabungan)}",
+                        text = "Rp ${formatRupiah(tambahtabungan)}",
                         color = Color(0xFF578F52),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -317,7 +317,7 @@ fun FormTabunganTabungan(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "${(rencanapengisian)}",
+                        text = "${(targettabungan - tambahtabungan)}",
                         color = Color(0xFFD84141),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
