@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">E-RIT</string>
+    <string name="app_name">ERITMOBILE</string>
     <string name="list_kosong">Belum ada data</string>
     <string name="x_diklik">%1$s diklik!</string>\
     <string name="tambah_pemasukan">Tambah Pemasukan</string>
@@ -27,4 +27,52 @@
     <string name="pengeluaran">Pengeluaran</string>
     <string name="upload_gambar">Upload gambar</string>
     <string name="ambil_foto">Ambil foto</string>
+
+    <string name="landing1">Let’s save your money with E-RIT</string>
+    <string name="lewati">Lewati</string>
+    <string name="landing2">Kelola keuanganmu dengan E-RIT</string>
+    <string name="landing3">Capai tujuanmu dengan E-RIT</string>
+    <string name="mulai">Mulai</string>
+    <string name="buatakun">Buat Akun</string>
+    <string name="nama">Nama</string>
+    <string name="namapengguna">Nama pengguna</string>
+    <string name="email">Email</string>
+    <string name="katasandi">Kata sandi</string>
+    <string name="konfirmasi">Konfirmasi kata sandi</string>
+    <string name="daftar">Daftar</string>
+    <string name="sudahpunyaakun">Sudah Punya Akun?</string>
+    <string name="masuk">Masuk</string>
+    <string name="lupakatasandi">Lupa Kata Sandi?</string>
+    <string name="belumpunyaakun">Belum Punya Akun?</string>
+    <string name="input_valid">Registrasi berhasil.</string>
+    <string name="input_invalid">Form tidak boleh kosong.</string>
+    <string name="email_invalid">Email Anda kurang tepat.</string>
+    <string name="login_invalid">Gagal login.</string>
+    <string name="registered_account">Akun sudah terdaftar.</string>
+    <string name="password_invalid">Password minimal 8 karakter dan harus memiliki setidaknya satu angka dan simbol.</string>
+    <string name="confirm_invalid">Konfirmasi password tidak sesuai.</string>
+    <string name="databerhasildisimpan">Data berhasil disimpan</string>
+    <string name="tomboloke">OK</string>
+    <string name="kamuberhasilmasuk">Kamu berhasil masuk</string>
+
+    <string name="tambah_tabungan">Tambah Tabungan</string>
+    <string name="nama_tabungan">Nama Tabungan</string>
+    <string name="target_tabungan">Target Tabungan</string>
+    <string name="rencana_pengisian">Rencana Pengisian</string>
+    <string name="nominal_pengisian">Nominal Pengisian</string>
+
+    <string name="tanggal_dibuat">Tanggal dibuat</string>
+    <string name="nominal_perbulan">Nominal perbulan</string>
+    <string name="estimasi_selesai">Estimasi selesai</string>
+    <string name="tanggal_berakhir">Tanggal berakhir</string>
+    <string name="total_tabungan">Total tabungan</string>
+    <string name="sisa">Sisa</string>
+    <string name="riwayat_tabungan">Riwayat Tabungan</string>
+    <string name="tanggal_menabung">Tanggal Menabung</string>
+    <string name="hapus_tabungan">Hapus Tabungan</string>
+
+    <string name="ya">Ya</string>
+    <string name="tidak">Tidak</string>
+
+    <string name="invalid_tabungan">Data tabungan tidak boleh kosong.</string>
 </resources>

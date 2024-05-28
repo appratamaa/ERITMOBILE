@@ -1,0 +1,323 @@
+package org.bumandhala.eritmobile.ui.screen
+
+import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
+import org.bumandhala.eritmobile.R
+import org.bumandhala.eritmobile.database.EritDb
+import org.bumandhala.eritmobile.navigation.Screen
+import org.bumandhala.eritmobile.model.RegisterViewModel
+import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
+import org.bumandhala.eritmobile.util.ViewModelFactory
+import org.bumandhala.eritmobile.util.ViewModelFactoryUser
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Register(navController: NavHostController) {
+    val poppinsblack = FontFamily(Font(R.font.poppinsblack))
+    val poppinsmedium = FontFamily(Font(R.font.poppinsmedium))
+
+    var nama by rememberSaveable { mutableStateOf("") }
+    var namaError by remember { mutableStateOf(false) }
+
+    var namaPengguna by rememberSaveable { mutableStateOf("") }
+    var namaPenggunaError by remember { mutableStateOf(false) }
+
+    var email by rememberSaveable { mutableStateOf("") }
+    var emailError by remember { mutableStateOf(false) }
+
+    var kataSandi by remember { mutableStateOf("") }
+    var kataSandiError by remember { mutableStateOf(false) }
+
+    var passwordVisibility by remember { mutableStateOf(false) }
+    var konfirmasi by rememberSaveable { mutableStateOf("") }
+    var konfirmasiError by remember { mutableStateOf(false) }
+
+    val showDialog = remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val db = EritDb.getInstance(context)
+    val factory = ViewModelFactoryUser(db.dao)
+    val viewModel: RegisterViewModel = viewModel(factory = factory)
+    val coroutineScope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color(0xFF263AA2))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 43.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(R.drawable.logoertitmobile),
+                contentDescription = null,
+                modifier = Modifier.size(150.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(R.string.buatakun),
+                fontFamily = poppinsblack,
+                style = TextStyle(color = Color.White, fontSize = 26.sp),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            OutlinedTextField(
+                value = nama,
+                onValueChange = { nama = it },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.nama),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                shape = RoundedCornerShape(15),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+                textStyle = TextStyle(fontFamily = poppinsmedium)
+            )
+
+            OutlinedTextField(
+                value = namaPengguna,
+                onValueChange = { namaPengguna = it },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.namapengguna),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                shape = RoundedCornerShape(15),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+                textStyle = TextStyle(fontFamily = poppinsmedium)
+            )
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.email),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Next
+                ),
+                shape = RoundedCornerShape(15),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+                textStyle = TextStyle(fontFamily = poppinsmedium)
+            )
+            OutlinedTextField(
+                value = kataSandi,
+                onValueChange = { kataSandi = it },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.katasandi),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Next,
+
+                    ),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        val icon: Painter = if (passwordVisibility) {
+                            painterResource(id = R.drawable.eye_off)
+                        } else {
+                            painterResource(id = R.drawable.eye_on)
+                        }
+                        Icon(icon, contentDescription = "Toggle password visibility")
+                    }
+                },
+                shape = RoundedCornerShape(15),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+                textStyle = TextStyle(fontFamily = poppinsmedium),
+            )
+            OutlinedTextField(
+                value = konfirmasi,
+                onValueChange = { konfirmasi = it },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.konfirmasi),
+                        style = TextStyle(color = Color(0xFFBEBEBE), fontSize = 18.sp),
+                        fontFamily = poppinsmedium,
+                    )
+                },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
+                        val icon: Painter = if (passwordVisibility) {
+                            painterResource(id = R.drawable.eye_off)
+                        } else {
+                            painterResource(id = R.drawable.eye_on)
+                        }
+                        Icon(icon, contentDescription = "Toggle password visibility")
+                    }
+                },
+                shape = RoundedCornerShape(15),
+                colors = TextFieldDefaults.outlinedTextFieldColors(containerColor = Color.White),
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = TextStyle(fontFamily = poppinsmedium)
+            )
+            Spacer(modifier = Modifier.height(36.dp))
+            Button(
+                onClick = {
+                    namaError = (nama == "")
+                    namaPenggunaError = (namaPengguna == "")
+                    emailError = (email == "")
+                    kataSandiError = (kataSandi == "")
+                    konfirmasiError = (konfirmasi == "")
+                    if (namaError || namaPenggunaError || emailError || kataSandiError || konfirmasiError) {
+                        Toast.makeText(
+                            context, context.getString(R.string.input_invalid),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@Button
+                    } else {
+                        coroutineScope.launch {
+                            if (viewModel.register(
+                                    nama,
+                                    namaPengguna,
+                                    email,
+                                    kataSandi,
+                                    konfirmasi
+                                )
+                            ) {
+                                showDialog.value = true
+                            } else {
+                                Toast.makeText(
+                                    context, context.getString(R.string.registered_account),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(15)
+            ) {
+                Text(
+                    text = stringResource(R.string.daftar),
+                    fontFamily = poppinsblack,
+                    style = TextStyle(color = Color.White, fontSize = 22.sp),
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = stringResource(R.string.sudahpunyaakun),
+                fontFamily = poppinsmedium,
+                style = TextStyle(color = Color.White, fontSize = 18.sp),
+            )
+            Text(
+                text = stringResource(R.string.masuk),
+                fontFamily = poppinsblack,
+                style = TextStyle(color = Color.White, fontSize = 18.sp),
+                modifier = Modifier.clickable {
+                    navController.navigate(Screen.Login.route)
+                }
+            )
+        }
+        if (showDialog.value) {
+            PopupRegister(showDialog = showDialog, navController = navController)
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Composable
+fun RegisterPreview() {
+    ERITMOBILETheme {
+        Register(rememberNavController())
+    }
+}

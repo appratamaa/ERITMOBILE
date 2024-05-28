@@ -64,6 +64,7 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
         return dao.getPengeluaranById(idPengeluaran)
     }
 
+
     fun updatePengeluaran(
         idPengeluaran: Long,
         tanggal: String,
@@ -98,4 +99,5 @@ class DetailViewModel(private val dao: CatatanDao): ViewModel() {
     suspend fun getTotalPengeluaran(): Int {
         return dao.getTotalPengeluaran()
     }
+
 }

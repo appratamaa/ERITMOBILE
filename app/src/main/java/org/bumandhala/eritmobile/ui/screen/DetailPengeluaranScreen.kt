@@ -325,7 +325,7 @@ fun getImageFilePath(context: Context, uri: Uri): String? {
 
 
 @Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun DetailPengeluaranScreenPreview() {
     ERITMOBILETheme {

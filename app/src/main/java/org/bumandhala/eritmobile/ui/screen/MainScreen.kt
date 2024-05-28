@@ -66,7 +66,7 @@ import org.bumandhala.eritmobile.model.Pengeluaran
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.SettingsDataStore
-import org.bumandhala.eritmobile.util.ViewModelFactory
+import org.bumandhala.eritmobile.util.ViewModelFactoryCatatan
 import java.text.NumberFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -122,37 +122,35 @@ fun MainScreen(navController: NavHostController) {
         bottomBar = {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth().padding(8.dp).background(color = White)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(color = White)
             ) {
-                // Menambahkan tombol pertama
-                IconButton(
-                    onClick = { /* Tindakan saat tombol pertama diklik */ }
-                ) {
+                // Tombol Beranda
+                IconButton(onClick = { navController.navigate(Screen.Home.route) }) {
                     Icon(
-                        painter = painterResource(R.drawable.home), // Ganti dengan ikon Anda
+                        painter = painterResource(R.drawable.home),
                         contentDescription = "Beranda",
-                        modifier = Modifier
-                            .size(28.dp),
+                        modifier = Modifier.size(28.dp)
                     )
                 }
 
-                // Menambahkan tombol kedua
-                IconButton(
-                    onClick = { /* Tindakan saat tombol kedua diklik */ }
-                ) {
+                // Tombol Grafik
+                IconButton(onClick = { navController.navigate("Screen.Grafik.route") }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_auto_graph_24), // Ganti dengan ikon Anda
-                        contentDescription = "Grafik"
+                        painter = painterResource(id = R.drawable.graph),
+                        contentDescription = "Grafik",
+                        modifier = Modifier.size(28.dp)
                     )
                 }
 
-                // Menambahkan tombol ketiga
-                IconButton(
-                    onClick = { /* Tindakan saat tombol ketiga diklik */ }
-                ) {
+                // Tombol Profil (asumsikan Screen.Profile ada)
+                IconButton(onClick = { navController.navigate("profile_screen") }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_person_24), // Ganti dengan ikon Anda
-                        contentDescription = "Profil"
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profil",
+                        modifier = Modifier.size(28.dp)
                     )
                 }
             }
@@ -187,7 +185,7 @@ fun ScreenContent(
 ) {
     val context = LocalContext.current
     val db = CatatanDb.getInstance(context)
-    val factory = ViewModelFactory(db.dao)
+    val factory = ViewModelFactoryCatatan(db.dao)
     val viewModel: MainViewModel = viewModel(factory = factory)
     val pemasukanData by viewModel.pemasukanData.collectAsState()
     val pengeluaranData by viewModel.pengeluaranData.collectAsState()
@@ -219,7 +217,7 @@ fun ScreenContent(
         }
 
         Row {
-            MyButtons(selectedButton) { newSelection ->
+            MyButtons(navController, selectedButton) { newSelection ->
                 onSelectedButtonChange(newSelection)
             }
         }
@@ -335,7 +333,7 @@ fun ScreenContent(
 
 
 @Composable
-fun MyButtons(selectedButton: String, onSelectionChange: (String) -> Unit) {
+fun MyButtons(navController: NavHostController, selectedButton: String, onSelectionChange: (String) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -372,7 +370,7 @@ fun MyButtons(selectedButton: String, onSelectionChange: (String) -> Unit) {
         }
 
         Button(
-            onClick = { onSelectionChange("Tabungan") },
+            onClick = {navController.navigate(Screen.Tabungan.route)},
             colors = ButtonDefaults.buttonColors(if (selectedButton == "Tabungan") Color(0xFFFAC36A) else White),
             modifier = Modifier.weight(1f)
         ) {
