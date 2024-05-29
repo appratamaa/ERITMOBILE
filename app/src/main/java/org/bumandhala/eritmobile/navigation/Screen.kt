@@ -23,5 +23,6 @@ sealed class Screen(val route: String) {
         fun withId(id: Long) = "detailtabungantabungan/$id"
     }
     data object Tambahtabungan: Screen("tambahtabungan")
+    data object ResetPassword: Screen("resetpassword")
 
 }

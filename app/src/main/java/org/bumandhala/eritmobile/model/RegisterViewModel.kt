@@ -25,4 +25,15 @@ class RegisterViewModel(private val dao: UserDao): ViewModel() {
         }
         return false
     }
+        suspend fun resetPassword(email: String, newPassword: String): Boolean {
+            val user = dao.getUserByEmail(email)
+            return if (user != null) {
+                user.password = newPassword
+                dao.update(user)
+                true
+            } else {
+                false
+            }
+
+    }
 }

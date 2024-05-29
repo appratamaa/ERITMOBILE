@@ -160,7 +160,7 @@ fun Login(navController: NavHostController) {
                 fontFamily = poppinsmedium,
                 style = TextStyle(color = Color.White, fontSize = 18.sp),
                 modifier = Modifier.padding(end = 150.dp).clickable {
-//                    navController.navigate(Screen.Landing3.route)
+                    navController.navigate(Screen.ResetPassword.route)
                 }
             )
             Spacer(modifier = Modifier.height(36.dp))

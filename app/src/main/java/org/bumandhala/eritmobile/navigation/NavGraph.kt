@@ -21,6 +21,7 @@ import org.bumandhala.eritmobile.ui.screen.LandingScreen
 import org.bumandhala.eritmobile.ui.screen.Login
 import org.bumandhala.eritmobile.ui.screen.MainScreen
 import org.bumandhala.eritmobile.ui.screen.Register
+import org.bumandhala.eritmobile.ui.screen.ResetPassword
 import org.bumandhala.eritmobile.ui.screen.Tabungan
 import org.bumandhala.eritmobile.ui.screen.TambahTabungan
 
@@ -81,6 +82,9 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         }
         composable(route = Screen.Tambahtabungan.route){
            TambahTabungan(navController)
+        }
+        composable(route = Screen.ResetPassword.route){
+            ResetPassword(navController)
         }
     }
 }
