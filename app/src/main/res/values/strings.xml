@@ -66,4 +66,10 @@
     <string name="tanggal">Tanggal</string>
     <string name="nominal">Nominal</string>
     <string name="keterangan">Keterangan</string>
+
+    <string name="reset_password">Reset Password</string>
+    <string name="new_pass">Kata sandi baru</string>
+    <string name="invalid_pass">Kata sandi yang dimasukan tidak sama!</string>
+    <string name="invalid_reset">Tidak boleh kosong.</string>
+    <string name="reset_success">Reset password berhasil!</string>
 </resources>
