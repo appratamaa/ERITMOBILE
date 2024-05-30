@@ -11,8 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -58,6 +63,15 @@ fun ResetPassword(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.kembali),
+                            tint = Color(0xFF20BCCB) // Warna ikon
+                        )
+                    }
+                },
                 title = {
                     Text(
                         text = stringResource(id = R.string.app_name),
@@ -67,7 +81,7 @@ fun ResetPassword(navController: NavHostController) {
                         color = Color(0xFF20BCCB),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 16.dp)
+                            .padding(end = 38.dp)
                     )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -91,6 +105,7 @@ fun ResetPassword(navController: NavHostController) {
 fun ResetContent(modifier: Modifier, navController: NavHostController) {
     val poppinsextrabold = FontFamily(Font(R.font.poppinsextrabold))
     val poppinsmedium = FontFamily(Font(R.font.poppinsmedium))
+    val poppinsbold = FontFamily(Font(R.font.poppinsbold))
 
     val context = LocalContext.current
     val db = EritDb.getInstance(context)
@@ -109,7 +124,7 @@ fun ResetContent(modifier: Modifier, navController: NavHostController) {
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = stringResource(R.string.reset_password),
+        Text(text = stringResource(R.string.reset_pass),
             fontSize = 24.sp,
             fontFamily = poppinsextrabold,
             modifier = Modifier.padding(top = 12.dp),
@@ -164,8 +179,16 @@ fun ResetContent(modifier: Modifier, navController: NavHostController) {
                     Toast.LENGTH_SHORT
                 ).show()
 
-        }) {
-            Text(text = stringResource(R.string.reset_password))
+        },
+            shape = MaterialTheme.shapes.small, // Mengatur shape menjadi lebih sedikit lengkung
+            colors = ButtonDefaults.buttonColors(Color(0xFF263AA2)) // Mengatur warna tombol menjadi biru
+        ) {
+            Text(
+                text = stringResource(id = R.string.reset_password),
+                modifier = Modifier.padding(horizontal = 92.dp),
+                fontFamily = poppinsextrabold,
+                fontSize = 16.sp
+            )
         }
     }
 }

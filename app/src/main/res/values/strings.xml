@@ -67,7 +67,8 @@
     <string name="nominal">Nominal</string>
     <string name="keterangan">Keterangan</string>
 
-    <string name="reset_password">Reset Password</string>
+    <string name="reset_password">Reset</string>
+    <string name="reset_pass">Reset Password</string>
     <string name="new_pass">Kata sandi baru</string>
     <string name="invalid_pass">Kata sandi yang dimasukan tidak sama!</string>
     <string name="invalid_reset">Tidak boleh kosong.</string>
