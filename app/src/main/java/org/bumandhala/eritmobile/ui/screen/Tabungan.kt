@@ -2,6 +2,7 @@ package org.bumandhala.eritmobile.ui.screen
 
 import android.content.res.Configuration
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +30,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -45,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -71,7 +75,7 @@ import org.bumandhala.eritmobile.util.ViewModelFactoryTabunganScreen
 @Composable
 fun Tabungan(navController: NavHostController) {
     val poppinsblack = FontFamily(Font(R.font.poppinsblack))
-
+    val context = LocalContext.current
     SettingsDataStore(LocalContext.current)
 
     Scaffold(
@@ -100,13 +104,52 @@ fun Tabungan(navController: NavHostController) {
             FloatingActionButton(
                 onClick = {
                     navController.navigate(Screen.FormBaruTabungan.route)
-                }
+                }, containerColor = Color(0xFF20BCCB)
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = stringResource(id = R.string.tambah_tabungan),
-                    tint = Color(0xFF20BCCB)
+                    tint = Color.White
                 )
+            }
+        },
+        bottomBar = {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .background(color = Color.White)
+            ) {
+                // Tombol Beranda
+                IconButton(onClick = { navController.navigate(Screen.Home.route) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.home),
+                        contentDescription = "Beranda",
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
+                    )
+                }
+
+                IconButton(onClick = {
+                    Toast.makeText(context, "Fitur grafik masih dalam tahap pengembangan", Toast.LENGTH_SHORT).show()
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.graph),
+                        contentDescription = "Grafik",
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
+                    )
+                }
+
+                IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = "Profil",
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
+                    )
+                }
             }
         }
     ) { padding ->
@@ -303,7 +346,6 @@ fun ListItemTabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) {
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun TabunganPreview() {
     ERITMOBILETheme {

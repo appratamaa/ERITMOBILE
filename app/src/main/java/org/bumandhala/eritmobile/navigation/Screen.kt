@@ -29,4 +29,11 @@ sealed class Screen(val route: String) {
         fun withId(id: Long) = "detailtabungantabungan/$id"
     }
     data object Tambahtabungan: Screen("tambahtabungan")
+
+    data object Profile: Screen("profile")
+
+    companion object {
+        const val routeWithArgument = "profile/{userId}"
+        const val KEY_USER_ID = "userId"
+    }
 }

@@ -75,4 +75,7 @@
     <string name="tidak">Tidak</string>
 
     <string name="invalid_tabungan">Data tabungan tidak boleh kosong.</string>
+
+    <string name="graph_feature_message">Fitur Grafik masih dalam tahap pengembangan</string>
+
 </resources>

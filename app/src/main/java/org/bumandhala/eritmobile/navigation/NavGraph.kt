@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import org.bumandhala.eritmobile.navigation.Screen.Companion.KEY_USER_ID
 import org.bumandhala.eritmobile.ui.screen.DetailPemasukanScreen
 import org.bumandhala.eritmobile.ui.screen.DetailPengeluaranScreen
 import org.bumandhala.eritmobile.ui.screen.DetailTabunganScreen
@@ -22,6 +23,7 @@ import org.bumandhala.eritmobile.ui.screen.Landing3
 import org.bumandhala.eritmobile.ui.screen.LandingScreen
 import org.bumandhala.eritmobile.ui.screen.Login
 import org.bumandhala.eritmobile.ui.screen.MainScreen
+import org.bumandhala.eritmobile.ui.screen.ProfileScreen
 import org.bumandhala.eritmobile.ui.screen.Register
 import org.bumandhala.eritmobile.ui.screen.Tabungan
 import org.bumandhala.eritmobile.ui.screen.TambahTabungan
@@ -33,13 +35,13 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         navController = navController,
         startDestination = Screen.LandingScreen.route
     ) {
-        composable(route = Screen.Home.route){
+        composable(route = Screen.Home.route) {
             MainScreen(navController)
         }
-        composable(route = Screen.FormBaruPemasukan.route){
+        composable(route = Screen.FormBaruPemasukan.route) {
             DetailPemasukanScreen(navController)
         }
-        composable(route = Screen.FormBaruPengeluaran.route){
+        composable(route = Screen.FormBaruPengeluaran.route) {
             DetailPengeluaranScreen(navController)
         }
         composable(
@@ -47,7 +49,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             arguments = listOf(
                 navArgument(KEY_ID_PEMASUKAN) { type = NavType.LongType }
             )
-        ) {navBackStackEntry ->
+        ) { navBackStackEntry ->
             val idPemasukan = navBackStackEntry.arguments?.getLong(KEY_ID_PEMASUKAN)
             DetailPemasukanScreen(navController, idPemasukan)
         }
@@ -56,14 +58,14 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             arguments = listOf(
                 navArgument(KEY_ID_PENGELUARAN) { type = NavType.LongType }
             )
-        ) {navBackStackEntry ->
+        ) { navBackStackEntry ->
             val idPengeluaran = navBackStackEntry.arguments?.getLong(KEY_ID_PENGELUARAN)
             DetailPengeluaranScreen(navController, idPengeluaran)
         }
 
 
         composable(route = Screen.LandingScreen.route) {
-            LandingScreen (navController)
+            LandingScreen(navController)
         }
         composable(route = Screen.Landing1.route) {
             Landing1(navController)
@@ -80,16 +82,16 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
         composable(route = Screen.Login.route) {
             Login(navController)
         }
-        composable(route = Screen.Home.route){
+        composable(route = Screen.Home.route) {
             MainScreen(navController)
         }
-        composable(route = Screen.FormBaru.route){
+        composable(route = Screen.FormBaru.route) {
             DetailPemasukanScreen(navController)
         }
-        composable(route = Screen.Tabungan.route){
+        composable(route = Screen.Tabungan.route) {
             Tabungan(navController)
         }
-        composable(route = Screen.FormBaruTabungan.route){
+        composable(route = Screen.FormBaruTabungan.route) {
             DetailTabunganScreen(navController)
         }
         composable(
@@ -97,12 +99,23 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
             arguments = listOf(
                 navArgument(KEY_ID_TABUNGAN) { type = NavType.LongType }
             )
-        ) {navBackStackEntry ->
+        ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_TABUNGAN)
-            DetailTabunganTabungan(navController,id)
+            DetailTabunganTabungan(navController, id)
         }
-        composable(route = Screen.Tambahtabungan.route){
+        composable(route = Screen.Tambahtabungan.route) {
             TambahTabungan(navController)
         }
+
+        composable(route = Screen.Profile.route) {
+            ProfileScreen(navController)
+        }
+//        composable(
+//            route = "profile/{email}",
+//            arguments = listOf(navArgument("email") { type = NavType.StringType })
+//        ) { backStackEntry ->
+//            val email = backStackEntry.arguments?.getString("email") ?: ""
+//            ProfileScreen(navController = navController, email = email)
+//        }
+        }
     }
-}

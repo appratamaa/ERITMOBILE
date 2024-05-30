@@ -49,6 +49,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -73,6 +75,7 @@ const val KEY_ID_TABUNGAN ="idTabungan"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
+    val poppinsblack = FontFamily(Font(R.font.poppinsblack))
     val context = LocalContext.current
     val db = TabunganScreenDb.getInstance(context)
     val factory = ViewModelFactoryTabunganScreen(db.dao)
@@ -129,6 +132,7 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
             title = {
                 Text(
                     text = stringResource(id = R.string.app_name),
+                    fontFamily = poppinsblack,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.ExtraBold,
                     color = Color(0xFF20BCCB),
@@ -237,6 +241,7 @@ fun FormTabunganTabungan(
         val factory = ViewModelFactoryTabunganScreen(db.dao)
         val viewModel: MainViewModelTabunganScreen = viewModel(factory = factory)
         val data by viewModel.data.collectAsState()
+
         Column(
             modifier = modifier
                 .background(color = Color(0xFFFAC36A), shape = RoundedCornerShape(25.dp))
@@ -256,29 +261,63 @@ fun FormTabunganTabungan(
                     .background(color = Color.White, shape = RoundedCornerShape(25.dp))
                     .fillMaxSize(),
             ) {
-                Text(
-                    text = stringResource(R.string.tanggal_dibuat) + "                                ${(tanggaltabungan)}",
+                Row(
                     modifier = Modifier.padding(start = 26.dp, top = 24.dp),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = stringResource(R.string.nominal_perbulan) + "                           Rp ${formatRupiah(nominalpengisian)}",
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${stringResource(R.string.tanggal_dibuat)}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = tanggaltabungan,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
                     modifier = Modifier.padding(start = 26.dp, top = 6.dp),
-                    color = Color.Black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = stringResource(R.string.estimasi_selesai) + "                             ${(rencanapengisian)} ${(rentangwaktu)} ",
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${stringResource(R.string.nominal_perbulan)}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "Rp ${formatRupiah(nominalpengisian)}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
                     modifier = Modifier.padding(start = 26.dp, top = 6.dp),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${stringResource(R.string.estimasi_selesai)}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = "$rencanapengisian $rentangwaktu",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
                 Text(
                     text = stringResource(R.string.tanggal_berakhir),
                     modifier = Modifier.padding(start = 26.dp, top = 6.dp),
@@ -291,38 +330,42 @@ fun FormTabunganTabungan(
                     color = Color.LightGray,
                     thickness = 1.dp
                 )
-                Text(
-                    text = "" + stringResource(R.string.total_tabungan) + "                                " + stringResource(
-                        R.string.sisa
-                    ),
-                    modifier = Modifier.padding(start = 26.dp, top = 6.dp),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                )
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 26.dp, top = 6.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.padding(start = 26.dp, top = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "${stringResource(R.string.total_tabungan)}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = stringResource(R.string.sisa),
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                Row(
+                    modifier = Modifier.padding(start = 26.dp, top = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "Rp ${formatRupiah(targettabungan)}",
                         color = Color(0xFF578F52),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 14.sp,
                         modifier = Modifier.weight(1f)
                     )
                     Text(
                         text = "${(rencanapengisian)}",
                         color = Color(0xFFD84141),
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(0.67f)
+                        fontSize = 14.sp,
+                        modifier = Modifier.weight(1f)
                     )
                 }
                 Card(
@@ -353,12 +396,10 @@ fun FormTabunganTabungan(
                         )
                     }
                 }
-
                         if (data.isEmpty()) {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
-//                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                                     .background(color = Color.White)
                                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                                 verticalArrangement = Arrangement.Center,
@@ -370,7 +411,6 @@ fun FormTabunganTabungan(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-//                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                                     .background(color = Color.White)
                                     .padding(16.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -512,7 +552,6 @@ fun ListItemTambahtabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun TabunganTabunganPreview() {
     ERITMOBILETheme {

@@ -29,8 +29,8 @@ fun LandingScreen(navController: NavHostController) {
 
     DisposableEffect(Unit) {
         coroutineScope.launch {
-            delay(800)
-            navController.navigate(Screen.Home.route)
+            delay(1200)
+            navController.navigate(Screen.Landing1.route)
         }
         onDispose { }
     }

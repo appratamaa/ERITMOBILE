@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,6 +51,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -77,7 +80,8 @@ import java.util.Locale
 @Composable
 fun MainScreen(navController: NavHostController) {
     SettingsDataStore(LocalContext.current)
-
+    val context = LocalContext.current
+    val poppinsblack = FontFamily(Font(R.font.poppinsblack))
     var selectedButton by remember { mutableStateOf("Pemasukan") }
 
     Scaffold(
@@ -86,6 +90,7 @@ fun MainScreen(navController: NavHostController) {
                 title = {
                     Text(
                         text = stringResource(id = R.string.app_name),
+                        fontFamily = poppinsblack,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF20BCCB),
@@ -127,30 +132,32 @@ fun MainScreen(navController: NavHostController) {
                     .padding(8.dp)
                     .background(color = White)
             ) {
-                // Tombol Beranda
                 IconButton(onClick = { navController.navigate(Screen.Home.route) }) {
                     Icon(
                         painter = painterResource(R.drawable.home),
                         contentDescription = "Beranda",
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
                     )
                 }
 
-                // Tombol Grafik
-                IconButton(onClick = { navController.navigate("Screen.Grafik.route") }) {
+                IconButton(onClick = {
+                    Toast.makeText(context, "Fitur grafik masih dalam tahap pengembangan", Toast.LENGTH_SHORT).show()
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.graph),
                         contentDescription = "Grafik",
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
                     )
                 }
 
-                // Tombol Profil (asumsikan Screen.Profile ada)
-                IconButton(onClick = { navController.navigate("profile_screen") }) {
+                IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.profile),
                         contentDescription = "Profil",
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(28.dp),
+                        tint = Color(0xFF20BCCB)
                     )
                 }
             }

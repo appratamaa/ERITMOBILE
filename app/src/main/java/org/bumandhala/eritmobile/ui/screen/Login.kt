@@ -179,7 +179,7 @@ fun Login(navController: NavHostController) {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                    },
+                },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF20BCCB)),
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(15)
