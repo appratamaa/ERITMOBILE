@@ -136,7 +136,7 @@ fun FormPengeluaran(
 
     // Memilih gambar dari galeri
     val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
+        uri?.let { it ->
             val filePath = getImageFilePath(context, it)
             Log.d("FormPengeluaran", "Selected image file path: $filePath")
             filePath?.let { onImagePathChange(it) }

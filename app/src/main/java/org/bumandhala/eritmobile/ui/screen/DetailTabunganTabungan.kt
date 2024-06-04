@@ -1,6 +1,5 @@
 package org.bumandhala.eritmobile.ui.screen
 
-import android.content.res.Configuration
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -69,7 +68,7 @@ import org.bumandhala.eritmobile.util.ViewModelFactoryTabunganScreen
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-const val KEY_ID_TABUNGAN ="idTabungan"
+const val KEY_ID_TABUNGAN = "idTabungan"
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,6 +112,12 @@ fun DetailTabunganTabungan(navController: NavHostController, id: Long? = null) {
         rentangwaktu = rentangwaktu,
         tambahtabungan = tambahtabungan
     )
+
+    LaunchedEffect(tambahtabungan) {
+        if (id == null) return@LaunchedEffect
+        val data = viewModel.getTabunganScreen(id) ?: return@LaunchedEffect
+        tambahtabungan = data.tambahtabungan
+    }
 
 
     Column(
@@ -194,8 +199,7 @@ fun FormTabunganTabungan(
         modifier = modifier
             .offset(y = (-16).dp)
             .background(color = Color(0xFFEEEFF4))
-            .fillMaxSize()
-            ,
+            .fillMaxSize(),
     ) {
         // Menampilkan salam dan waktu tanggal
         Row(
@@ -240,7 +244,7 @@ fun FormTabunganTabungan(
         val db = TabunganScreenDb.getInstance(context)
         val factory = ViewModelFactoryTabunganScreen(db.dao)
         val viewModel: MainViewModelTabunganScreen = viewModel(factory = factory)
-        val data by viewModel.data.collectAsState()
+        val data by viewModel.detail.collectAsState()
 
         Column(
             modifier = modifier
@@ -318,13 +322,13 @@ fun FormTabunganTabungan(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                Text(
-                    text = stringResource(R.string.tanggal_berakhir),
-                    modifier = Modifier.padding(start = 26.dp, top = 6.dp),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp
-                )
+//                Text(
+//                    text = stringResource(R.string.tanggal_berakhir),
+//                    modifier = Modifier.padding(start = 26.dp, top = 6.dp),
+//                    color = Color.Black,
+//                    fontWeight = FontWeight.Bold,
+//                    fontSize = 14.sp
+//                )
                 Spacer(modifier = Modifier.height(16.dp))
                 Divider(
                     color = Color.LightGray,
@@ -361,7 +365,7 @@ fun FormTabunganTabungan(
                         modifier = Modifier.weight(1f)
                     )
                     Text(
-                        text = "${(rencanapengisian)}",
+                        text = "Rp ${formatRupiah(targettabungan - tambahtabungan)}",
                         color = Color(0xFFD84141),
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
@@ -396,35 +400,35 @@ fun FormTabunganTabungan(
                         )
                     }
                 }
-                        if (data.isEmpty()) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(color = Color.White)
-                                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(text = stringResource(id = R.string.list_kosong))
-                            }
-                        } else {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(color = Color.White)
-                                    .padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.tanggal_menabung) + "                        " + stringResource(
-                                        R.string.nominal
-                                    ),
-                                    modifier = Modifier.padding(start = 16.dp, top = 12.dp),
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
-                                )
-                        }
+                if (data.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Color.White)
+                            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(text = stringResource(id = R.string.list_kosong))
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = Color.White)
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Text(
+                            text = stringResource(R.string.tanggal_menabung) + "                        " + stringResource(
+                                R.string.nominal
+                            ),
+                            modifier = Modifier.padding(start = 16.dp, top = 12.dp),
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
+                        )
+                    }
 
                     LazyColumn(
                         modifier = Modifier
@@ -434,7 +438,9 @@ fun FormTabunganTabungan(
                         contentPadding = PaddingValues(bottom = 84.dp)
                     ) {
                         items(data) {
-                            ListItemTambahtabungan(tabunganscreen = it) {
+                            if (it.namatabungan == namatabungan && it.tambahtabungan != 0) {
+                                ListItemTambahtabungan(tabunganscreen = it) {
+                                }
                             }
                         }
                     }
@@ -453,7 +459,7 @@ fun FormTabunganTabungan(
                 ) {
                     Button(
                         onClick = {
-                            navController.navigate(Screen.Tambahtabungan.route)
+                            navController.navigate(Screen.Tambahtabungan.withNama(namatabungan))
                         },
                         modifier = Modifier
                             .fillMaxWidth(0.49f)
@@ -502,20 +508,21 @@ fun FormTabunganTabungan(
                                 overflow = TextOverflow.Ellipsis,
                             )
                         }
-                            DisplayAlertDialog(
-                                openDialog = showDialog,
-                                onDismissRequest = { showDialog = false }) {
-                                showDialog = false
-                                viewModel.delete(id)
-                                navController.popBackStack()
-                            }
+                        DisplayAlertDialog(
+                            openDialog = showDialog,
+                            onDismissRequest = { showDialog = false }) {
+                            showDialog = false
+                            viewModel.delete(id)
+                            navController.popBackStack()
+                        }
                     }
                 }
             }
-            }
         }
+    }
 
 }
+
 @Composable
 fun ListItemTambahtabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) {
     Row(

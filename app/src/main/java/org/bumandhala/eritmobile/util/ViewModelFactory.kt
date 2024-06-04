@@ -2,13 +2,13 @@ package org.bumandhala.eritmobile.util
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import org.bumandhala.eritmobile.database.CatatanDao
+import org.bumandhala.eritmobile.database.TransaksiDao
 import org.bumandhala.eritmobile.ui.screen.DetailViewModel
 import org.bumandhala.eritmobile.ui.screen.MainViewModel
 import java.lang.IllegalArgumentException
 
 class ViewModelFactory(
-    private val dao: CatatanDao
+    private val dao: TransaksiDao
 ) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

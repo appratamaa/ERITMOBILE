@@ -57,17 +57,19 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+const val KEY_NAMA_TABUNGAN = "namatabungan"
+
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TambahTabungan(navController: NavHostController, id: Long? = null) {
+fun TambahTabungan(navController: NavHostController, namatabungan: String? = null, id: Long? = null) {
     val context = LocalContext.current
     val db = TabunganScreenDb.getInstance(context)
     val factory = ViewModelFactoryTabunganScreen(db.dao)
     val viewModel: DetailViewModelTabunganScreen = viewModel(factory = factory)
 
     var tanggaltabungan by remember { mutableStateOf("") }
-    var namaTabungan by remember { mutableStateOf("") }
+    var namaTabungan by remember { mutableStateOf(namatabungan) }
     var targetTabungan by remember { mutableIntStateOf(0) } // Ubah tipe data nominal menjadi Int
     var rencanaPengisian by remember { mutableIntStateOf(0) }
     var nominalPengisian by remember { mutableIntStateOf(0) }
@@ -78,7 +80,7 @@ fun TambahTabungan(navController: NavHostController, id: Long? = null) {
         if (id == null) return@LaunchedEffect
         val data = viewModel.getTabunganScreen(id) ?: return@LaunchedEffect
         tanggaltabungan = data.tanggaltabungan
-        namaTabungan = data.namatabungan
+//        namaTabungan = data.namatabungan
         targetTabungan = data.targettabungan
         rencanaPengisian = data.rencanapengisian
         nominalPengisian = data.nominalpengisian
@@ -112,7 +114,7 @@ fun TambahTabungan(navController: NavHostController, id: Long? = null) {
         FormTambahtabungan(
             tanggaltabungan = tanggaltabungan,
             ontanggaltabunganChange = { tanggaltabungan = it },
-            namatabungan = namaTabungan,
+            namatabungan = namaTabungan!!,
             onnamatabunganChange = { namaTabungan = it },
             targettabungan = targetTabungan,
             ontargettabunganChange = { targetTabungan = it },

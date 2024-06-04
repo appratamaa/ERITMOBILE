@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.bumandhala.eritmobile.database.TabunganScreenDao
 import org.bumandhala.eritmobile.model.Tabunganscreen
@@ -31,6 +32,11 @@ class DetailViewModelTabunganScreen(private val dao: TabunganScreenDao): ViewMod
     suspend fun getTabunganScreen(id: Long): Tabunganscreen? {
         return dao.getTabunganScreenById(id)
     }
+
+    suspend fun getDetailTabunganScreenByNama(namatabungan: String): Flow<List<Tabunganscreen>> {
+        return dao.getDetailTabunganScreenByNama(namatabungan)
+    }
+
 
 //    fun update(id: Long, namatabungan: String, targettabungan: Int, rencanapengisian: Int, nominalpengisian: Int) {
 //        val tabungan = Tabungan(

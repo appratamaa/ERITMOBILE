@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bumandhala.eritmobile.database.CatatanDao
+import org.bumandhala.eritmobile.database.TransaksiDao
 import org.bumandhala.eritmobile.model.Pemasukan
 import org.bumandhala.eritmobile.model.Pengeluaran
 
-class DetailViewModel(private val dao: CatatanDao): ViewModel() {
+class DetailViewModel(private val dao: TransaksiDao): ViewModel() {
 
     fun insertPemasukan(tanggal: String, nominal: Int, keterangan: String) {
         val pemasukan = Pemasukan(

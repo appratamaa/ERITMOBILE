@@ -58,7 +58,6 @@ import org.bumandhala.eritmobile.database.EritDb
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.model.RegisterViewModel
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
-import org.bumandhala.eritmobile.util.ViewModelFactory
 import org.bumandhala.eritmobile.util.ViewModelFactoryUser
 
 @OptIn(ExperimentalMaterial3Api::class)

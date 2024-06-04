@@ -11,7 +11,7 @@ import org.bumandhala.eritmobile.model.Pengeluaran
 
 @Database(entities = [Pemasukan::class, Pengeluaran::class], version = 2, exportSchema = false)
 abstract class CatatanDb : RoomDatabase() {
-    abstract val dao: CatatanDao
+    abstract val dao: TransaksiDao
 
     companion object {
         @Volatile

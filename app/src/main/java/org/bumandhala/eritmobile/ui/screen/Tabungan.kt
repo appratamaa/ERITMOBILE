@@ -1,6 +1,5 @@
 package org.bumandhala.eritmobile.ui.screen
 
-import android.content.res.Configuration
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -64,7 +63,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.database.TabunganScreenDb
-import org.bumandhala.eritmobile.model.Tabunganscreen
+import org.bumandhala.eritmobile.model.TabunganAll
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
 import org.bumandhala.eritmobile.util.SettingsDataStore
@@ -312,7 +311,7 @@ fun ButtonTabungan(navController: NavHostController) {
     }
 }
 @Composable
-fun ListItemTabungan(tabunganscreen: Tabunganscreen, onClick: () -> Unit) {
+fun ListItemTabungan(tabunganscreen: TabunganAll, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

@@ -3,6 +3,7 @@ package org.bumandhala.eritmobile.navigation
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_PEMASUKAN
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_PENGELUARAN
 import org.bumandhala.eritmobile.ui.screen.KEY_ID_TABUNGAN
+import org.bumandhala.eritmobile.ui.screen.KEY_NAMA_TABUNGAN
 
 sealed class Screen(val route: String) {
     object Home : Screen("mainScreen")
@@ -28,7 +29,10 @@ sealed class Screen(val route: String) {
     data object DetailTabunganTabungan: Screen("detailtabungantabungan/{$KEY_ID_TABUNGAN}") {
         fun withId(id: Long) = "detailtabungantabungan/$id"
     }
-    data object Tambahtabungan: Screen("tambahtabungan")
+    data object TambahtabunganBaru: Screen("tambahtabungan")
+    data object Tambahtabungan: Screen("tambahtabungan/{$KEY_NAMA_TABUNGAN}") {
+        fun withNama(namatabungan: String) = "tambahtabungan/$namatabungan"
+    }
 
     data object Profile: Screen("profile")
 
@@ -36,4 +40,6 @@ sealed class Screen(val route: String) {
         const val routeWithArgument = "profile/{userId}"
         const val KEY_USER_ID = "userId"
     }
+
+    data object ResetPassword: Screen("resetpassword")
 }

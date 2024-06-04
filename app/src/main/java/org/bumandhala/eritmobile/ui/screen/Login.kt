@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,8 +58,9 @@ import org.bumandhala.eritmobile.R
 import org.bumandhala.eritmobile.database.EritDb
 import org.bumandhala.eritmobile.navigation.Screen
 import org.bumandhala.eritmobile.model.LoginViewModel
+import org.bumandhala.eritmobile.model.User
 import org.bumandhala.eritmobile.ui.theme.ERITMOBILETheme
-import org.bumandhala.eritmobile.util.ViewModelFactory
+import org.bumandhala.eritmobile.util.UserDataStore
 import org.bumandhala.eritmobile.util.ViewModelFactoryUser
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,6 +83,9 @@ fun Login(navController: NavHostController) {
     val factory = ViewModelFactoryUser(db.dao)
     val viewModel: LoginViewModel = viewModel(factory = factory)
     val coroutineScope = rememberCoroutineScope()
+
+    val dataStore = UserDataStore(context)
+    val user by dataStore.userFlow.collectAsState(User())
 
     Box(
         modifier = Modifier
@@ -162,6 +167,7 @@ fun Login(navController: NavHostController) {
                 style = TextStyle(color = Color.White, fontSize = 18.sp),
                 modifier = Modifier.padding(end = 150.dp).clickable {
 //                    navController.navigate(Screen.Landing3.route)
+                    navController.navigate(Screen.ResetPassword.route)
                 }
             )
             Spacer(modifier = Modifier.height(36.dp))
